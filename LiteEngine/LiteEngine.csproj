@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Dice.cs" />
+    <Compile Include="Input\XnaKeyboardHandler.cs" />
     <Compile Include="Math\RectangleF.cs" />
     <Compile Include="Math\RectangleI.cs" />
     <Compile Include="Math\Vector2F.cs" />
@@ -62,6 +63,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

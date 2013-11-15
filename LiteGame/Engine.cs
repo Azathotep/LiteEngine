@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using LiteEngine.Textures;
 using LiteEngine.Xna;
 using LiteEngine.Math;
+using LiteEngine.Input;
 
 namespace LiteGame
 {
@@ -34,9 +35,14 @@ namespace LiteGame
             Renderer.EndDraw();
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyboardHandler)
         {
-            _shipAngle += 0.05f;
+            if (keyboardHandler.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
+ 	            _shipAngle += 0.05f;
+            if (keyboardHandler.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
+                _shipAngle -= 0.05f;
+            if (keyboardHandler.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+                Exit();
         }
     }
 }
