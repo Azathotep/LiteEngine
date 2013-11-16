@@ -10,5 +10,10 @@
             X = x;
             Y = y;
         }
+
+        public static Vector2F operator +(Vector2F a, Vector2F b)
+        {
+            return new Vector2F(a.X + b.X, a.Y + b.Y);
+        }
     }
 }

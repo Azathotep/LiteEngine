@@ -35,7 +35,7 @@ namespace LiteEngine.Xna
             base.Update(gameTime);
         }
 
-        protected abstract void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyboardHandler);
+        protected abstract void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyHandler);
 
         protected XnaRenderer Renderer
         {

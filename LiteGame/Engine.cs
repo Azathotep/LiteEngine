@@ -13,6 +13,7 @@ namespace LiteGame
 {
     class Engine : LiteXnaEngine
     {
+        Ship _ship = new Ship();
         Texture _shipTexture;
         public Engine()
         {
@@ -20,9 +21,8 @@ namespace LiteGame
             Renderer.SetDeviceMode(800, 600, true);
             Renderer.Camera.SetViewField(40, 30);
             Renderer.Camera.LookAt(15, 10);
+            _ship.Position = new Vector2(15, 10);
         }
-
-        float _shipAngle=0;
 
         protected override void Draw(GameTime gameTime)
         {
@@ -33,19 +33,23 @@ namespace LiteGame
             Vector2 lookAt = new Vector2(20, 20);
             Matrix view = Matrix.CreateLookAt(new Vector3(lookAt, -1), new Vector3(lookAt, 0), new Vector3(0, -1, 0));
 
+            float facingAngle = (float)Math.Atan2(_ship.Facing.X, -_ship.Facing.Y);
             Renderer.BeginDraw();
-            Renderer.DrawSprite(_shipTexture, new RectangleF(10, 10, 2, 2), _shipAngle);
+            Renderer.DrawSprite(_shipTexture, new RectangleF(_ship.Position.X, _ship.Position.Y, 2, 2), facingAngle);
             Renderer.EndDraw();
         }
 
-        protected override void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyboardHandler)
+        protected override void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyHandler)
         {
-            if (keyboardHandler.IsKeyDown(Keys.Right))
- 	            _shipAngle += 0.05f;
-            if (keyboardHandler.IsKeyDown(Keys.Left))
-                _shipAngle -= 0.05f;
-            if (keyboardHandler.IsKeyDown(Keys.Escape))
+            if (keyHandler.IsKeyDown(Keys.Right))
+                _ship.Rotate(0.1f);
+            if (keyHandler.IsKeyDown(Keys.Left))
+                _ship.Rotate(-0.1f);
+            if (keyHandler.IsKeyDown(Keys.Up))
+                _ship.ApplyThrust(0.01f);
+            if (keyHandler.IsKeyDown(Keys.Escape))
                 Exit();
+            _ship.Update();
         }
     }
 }
