@@ -56,18 +56,28 @@ namespace LiteEngine.Rendering
             _deviceManager.ApplyChanges();
         }
 
+        Camera _camera = new Camera();
+        public Camera Camera
+        {
+            get
+            {
+                return _camera;
+            }
+        }
+
         public void Clear(Color color)
         {
             _deviceManager.GraphicsDevice.Clear(ClearOptions.DepthBuffer | ClearOptions.Target, color, 1, 0);
             _deviceManager.GraphicsDevice.SetRenderTarget(null);
         }
 
-        public void BeginDraw(Matrix world, Matrix projection, Matrix view)
+        public void BeginDraw()
         {
+            
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
-            effect.Parameters["xWorld"].SetValue(world);
-            effect.Parameters["xProjection"].SetValue(projection);
-            effect.Parameters["xView"].SetValue(view);
+            effect.Parameters["xWorld"].SetValue(_camera.World);
+            effect.Parameters["xProjection"].SetValue(_camera.Projection);
+            effect.Parameters["xView"].SetValue(_camera.View);
             _spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.CreateScale(1));
         }
 
