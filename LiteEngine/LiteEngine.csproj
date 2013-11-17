@@ -57,6 +57,8 @@
     <Compile Include="Textures\SpriteSheet.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureBook.cs" />
+    <Compile Include="UI\Dialog.cs" />
+    <Compile Include="UI\UIManager.cs" />
     <Compile Include="Xna\XnaEngine.cs" />
   </ItemGroup>
   <ItemGroup>

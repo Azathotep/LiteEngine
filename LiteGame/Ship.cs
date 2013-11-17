@@ -27,6 +27,7 @@ namespace LiteGame
         public void Update()
         {
             _position += _velocity;
+            //_velocity.Y += 0.001f;
         }
 
         public void ApplyThrust(float amount)

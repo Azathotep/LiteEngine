@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using LiteEngine.Rendering;
 using LiteEngine.Input;
+using LiteEngine.UI;
 
 namespace LiteEngine.Xna
 {
@@ -13,6 +15,7 @@ namespace LiteEngine.Xna
         XnaRenderer _renderer;
         XnaKeyboardHandler _keyboardHandler;
         GraphicsDeviceManager _graphics;
+        UIManager _ui;
 
         public LiteXnaEngine()
         {
@@ -20,6 +23,21 @@ namespace LiteEngine.Xna
             Content.RootDirectory = "Content";
             _renderer = new XnaRenderer(_graphics, Content, Window);
             _keyboardHandler = new XnaKeyboardHandler();
+            _keyboardHandler.OnKeyPressed += _keyboardHandler_OnKeyPressed;
+            _ui = new UIManager(this);
+        }
+
+        int _keyboardHandler_OnKeyPressed(Keys key)
+        {
+            int repressDelay = 0;
+            if (_ui.ProcessKey(key, out repressDelay))
+                return repressDelay;
+            return OnKeyPress(key);
+        }
+
+        protected virtual int OnKeyPress(Keys key)
+        {
+            return 0;
         }
 
         protected override void Initialize()
@@ -35,6 +53,14 @@ namespace LiteEngine.Xna
             base.Update(gameTime);
         }
 
+        protected sealed override void Draw(GameTime gameTime)
+        {
+            DrawFrame(gameTime);
+            _ui.RenderUI(_renderer);
+            base.Draw(gameTime);
+        }
+
+        protected abstract void DrawFrame(GameTime gameTime);
         protected abstract void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyHandler);
 
         protected XnaRenderer Renderer
@@ -50,6 +76,14 @@ namespace LiteEngine.Xna
             get
             {
                 return _keyboardHandler;
+            }
+        }
+
+        public UIManager UIManager
+        {
+            get
+            {
+                return _ui;
             }
         }
     }

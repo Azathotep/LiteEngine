@@ -40,7 +40,6 @@ namespace LiteEngine.Rendering
                 _deviceManager.PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height;
                 _window.Position = Point.Zero;
                 _deviceManager.IsFullScreen = true;
-
             }
             else
             {
@@ -51,9 +50,24 @@ namespace LiteEngine.Rendering
                                              Screen.PrimaryScreen.Bounds.Height / 2 - height / 2);
                 _deviceManager.PreferredBackBufferWidth = width;
                 _deviceManager.PreferredBackBufferHeight = height;
-
             }
             _deviceManager.ApplyChanges();
+        }
+
+        public float ScreenWidth
+        {
+            get
+            {
+                return _deviceManager.PreferredBackBufferWidth;
+            }
+        }
+
+        public float ScreenHeight
+        {
+            get
+            {
+                return _deviceManager.PreferredBackBufferHeight;
+            }
         }
 
         Camera _camera = new Camera();
@@ -73,17 +87,12 @@ namespace LiteEngine.Rendering
 
         public void BeginDraw()
         {
-            
-            Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
-            effect.Parameters["xWorld"].SetValue(_camera.World);
-            effect.Parameters["xProjection"].SetValue(_camera.Projection);
-            effect.Parameters["xView"].SetValue(_camera.View);
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.CreateScale(1));
+            Begin(_camera.World, _camera.Projection, _camera.View);
         }
 
         public void EndDraw()
         {
-            _spriteBatch.End();
+            End();
         }
 
         public float DrawDepth
@@ -92,9 +101,14 @@ namespace LiteEngine.Rendering
             set;
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation)
         {
-            DrawSprite(texture, position, DrawDepth, rotation, new Vector2F(0.5f, 0.5f), Color.White);
+            DrawSprite(texture, center, DrawDepth, rotation, new Vector2F(0.5f, 0.5f), Color.White);
+        }
+
+        public void DrawExactSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
+        {
+            DrawSprite(texture, position, DrawDepth, rotation, new Vector2F(0f, 0f), Color.White);
         }
 
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2F origin, Color color, bool flipHorizontal = false)
@@ -120,6 +134,20 @@ namespace LiteEngine.Rendering
         internal void Initialize()
         {
             _spriteBatch = new SpriteBatch(_deviceManager.GraphicsDevice);
+        }
+
+        internal void Begin(Matrix world, Matrix projection, Matrix view)
+        {
+            Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
+            effect.Parameters["xWorld"].SetValue(world);
+            effect.Parameters["xProjection"].SetValue(projection);
+            effect.Parameters["xView"].SetValue(view);
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
+        }
+
+        internal void End()
+        {
+            _spriteBatch.End();
         }
     }
 }
