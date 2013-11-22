@@ -8,7 +8,7 @@ namespace LiteEngine.Core
     /// <summary>
     /// Provides access to random numbers
     /// </summary>
-    class Dice
+    public class Dice
     {
         static Random _r = new Random();
 
