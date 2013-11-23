@@ -18,9 +18,9 @@ namespace LiteEngine.Rendering
             SetViewField(20, 15);
         }
 
-        Vector2F _position;
+        Vector2 _position;
 
-        public Vector2F Position
+        public Vector2 Position
         {
             get
             {
@@ -52,21 +52,54 @@ namespace LiteEngine.Rendering
             }
         }
 
-        public void LookAt(float x, float y)
+        public void LookAt(Vector2 position)
         {
-            _position = new Vector2F(x,y);
-            _view = Matrix.CreateLookAt(new Vector3(x, y, -1), new Vector3(x, y, 0), new Vector3(0, -1, 0));
+            _position = position;
+            _view = Matrix.CreateLookAt(new Vector3(position, -1), new Vector3(position, 0), new Vector3(0, -1, 0));
         }
 
-        public void MoveBy(float x, float y)
+        public void MoveBy(Vector2 offset)
         {
-            LookAt(_position.X + x, _position.Y + y);
+            LookAt(_position + offset);
         }
+
+        Vector2 _viewField;
 
         public void SetViewField(float viewWidth, float viewHeight)
         {
+            _viewField = new Vector2(viewWidth, viewHeight);
             _world = Matrix.Identity;
             _projection = Matrix.CreateOrthographic(viewWidth, viewHeight, -1000.5f, 100);
+        }
+
+        public float ViewWidth
+        {
+            get
+            {
+                return _viewField.X;
+            }
+        }
+
+        public float ViewHeight
+        {
+            get
+            {
+                return _viewField.Y;
+            }
+        }
+
+        float _angle;
+        public float Angle 
+        { 
+            set
+            {
+                _angle = value;
+                _view = Matrix.CreateLookAt(new Vector3(_position, -1), new Vector3(_position, 0), new Vector3((float)System.Math.Sin(value), (float)System.Math.Cos(value), 0));
+            }
+            get
+            {
+                return _angle;
+            }
         }
     }
 }

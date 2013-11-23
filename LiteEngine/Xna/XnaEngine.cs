@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Dynamics;
 using LiteEngine.Rendering;
 using LiteEngine.Input;
 using LiteEngine.UI;
@@ -17,7 +16,6 @@ namespace LiteEngine.Xna
         XnaKeyboardHandler _keyboardHandler;
         GraphicsDeviceManager _graphics;
         UIManager _ui;
-        World _physics;
 
         public LiteXnaEngine()
         {
@@ -27,7 +25,6 @@ namespace LiteEngine.Xna
             _keyboardHandler = new XnaKeyboardHandler();
             _keyboardHandler.OnKeyPressed += _keyboardHandler_OnKeyPressed;
             _ui = new UIManager(this);
-            _physics = new World(new Vector2(0, 0));
         }
 
         int _keyboardHandler_OnKeyPressed(Keys key)
@@ -79,14 +76,6 @@ namespace LiteEngine.Xna
             get
             {
                 return _keyboardHandler;
-            }
-        }
-
-        public World Physics
-        {
-            get
-            {
-                return _physics;
             }
         }
 

@@ -3,56 +3,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using LiteEngine.Math;
+using LiteEngine.Rendering;
+using LiteEngine.Textures;
 
 namespace LiteGame
 {
     class Ship
     {
-        Vector2 _position;
-        Vector2 _velocity;
-        Vector2 _facing;
+        Body _body;
+        Texture _texture = new Texture("rocketship");
 
-        public Ship()
+        public Ship(World world)
         {
-            _facing = new Vector2(1, 0);
+            _body = BodyFactory.CreateBody(world);
+            _body.BodyType = BodyType.Dynamic;
+            _body.AngularDamping = 0.5f;
+            _body.Friction = 1f;
+            _body.Restitution = 0f; // 1f;
+            _body.Mass = 0.5f;
+            _body.Rotation = 0.1f;
+
+            FixtureFactory.AttachPolygon(new Vertices(new Vector2[] { new Vector2(0f, -0.4f), new Vector2(0.35f, 0.4f), new Vector2(-0.35f, 0.4f) }), 1f, _body);
+
         }
 
-        public void Rotate(float angle)
+        public float Rotation
         {
-            Matrix rot = Microsoft.Xna.Framework.Matrix.CreateRotationZ(angle);
-            _facing = Vector2.Transform(_facing, rot);
+            get
+            {
+                return _body.Rotation;
+            }
         }
 
-        public void Update()
+        public void ApplyForwardThrust(float amount)
         {
-            _position += _velocity;
-            //_velocity.Y += 0.001f;
-        }
-
-        public void ApplyThrust(float amount)
-        {
-            _velocity += _facing * amount;
+            Vector2 facing = new Vector2((float)Math.Sin(Rotation), -(float)Math.Cos(Rotation));
+            _body.ApplyForce(facing * 5f);
         }
 
         public Vector2 Position
         {
             get
             {
-                return _position;
+                return _body.Position;
             }
             set
             {
-                _position = value;
+                _body.Position = value;
             }
         }
 
-        public Vector2 Facing
+        internal void Draw(XnaRenderer renderer)
         {
-            get
-            {
-                return _facing;
-            }
+            renderer.DrawSprite(_texture, new RectangleF(Position.X, Position.Y, 1, 1), Rotation);
+        }
+
+        internal void RotateThrusters(float amount)
+        {
+            _body.ApplyTorque(amount);
         }
     }
 }
