@@ -27,15 +27,15 @@ namespace LiteEngine.Xna
             _ui = new UIManager(this);
         }
 
-        int _keyboardHandler_OnKeyPressed(Keys key)
+        int _keyboardHandler_OnKeyPressed(Keys key, GameTime gameTime)
         {
             int repressDelay = 0;
             if (_ui.ProcessKey(key, out repressDelay))
                 return repressDelay;
-            return OnKeyPress(key);
+            return OnKeyPress(key, gameTime);
         }
 
-        protected virtual int OnKeyPress(Keys key)
+        protected virtual int OnKeyPress(Keys key, GameTime gameTime)
         {
             return 0;
         }
@@ -48,7 +48,7 @@ namespace LiteEngine.Xna
 
         protected sealed override void Update(GameTime gameTime)
         {
-            _keyboardHandler.Update();
+            _keyboardHandler.Update(gameTime);
             UpdateFrame(gameTime, _keyboardHandler);
             base.Update(gameTime);
         }

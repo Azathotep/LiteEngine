@@ -26,10 +26,10 @@ namespace LiteGame
             _body.Restitution = 0f; // 1f;
             _body.Mass = 0.5f;
             _body.Rotation = 0.1f;
-
-            FixtureFactory.AttachPolygon(new Vertices(new Vector2[] { new Vector2(0f, -0.4f), new Vector2(0.35f, 0.4f), new Vector2(-0.35f, 0.4f) }), 1f, _body);
+            _f = FixtureFactory.AttachPolygon(new Vertices(new Vector2[] { new Vector2(0f, -0.4f), new Vector2(0.35f, 0.4f), new Vector2(-0.35f, 0.4f) }), 1f, _body);
 
         }
+        Fixture _f;
 
         public float Rotation
         {
@@ -41,8 +41,27 @@ namespace LiteGame
 
         public void ApplyForwardThrust(float amount)
         {
-            Vector2 facing = new Vector2((float)Math.Sin(Rotation), -(float)Math.Cos(Rotation));
-            _body.ApplyForce(facing * 5f);
+            _body.ApplyForce(Facing * 5f);
+        }
+
+        public Vector2 Facing
+        {
+            get
+            {
+                return new Vector2((float)Math.Sin(Rotation), -(float)Math.Cos(Rotation));
+            }
+        }
+
+        public Vector2 Velocity
+        {
+            get
+            {
+                if (_body.LinearVelocity.Length() > 2)
+                {
+                    int a = 1;
+                }
+                return _body.LinearVelocity;// / 55;
+            }
         }
 
         public Vector2 Position

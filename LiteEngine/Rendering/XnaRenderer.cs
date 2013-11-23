@@ -101,6 +101,11 @@ namespace LiteEngine.Rendering
             set;
         }
 
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation, float alpha)
+        {
+            DrawSprite(texture, center, DrawDepth, rotation, new Vector2F(0.5f, 0.5f), Color.White * 3);
+        }
+
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation)
         {
             DrawSprite(texture, center, DrawDepth, rotation, new Vector2F(0.5f, 0.5f), Color.White);
@@ -141,8 +146,8 @@ namespace LiteEngine.Rendering
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
             effect.Parameters["xWorld"].SetValue(world);
             effect.Parameters["xProjection"].SetValue(projection);
-            effect.Parameters["xView"].SetValue(view);
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
+            effect.Parameters["xView"].SetValue(view);   // blendstate was null before
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
         }
 
         internal void End()

@@ -23,10 +23,10 @@ namespace LiteGame
         World _world;
         PauseMenu _menu = new PauseMenu();
         Ship _ship;
-        Texture _obstacleTexture;
+        Texture _fireTexture;
         public Engine()
         {
-            _obstacleTexture = new Texture("pausemenu");
+            _fireTexture = new Texture("fireparticle");
             Renderer.SetDeviceMode(800, 600, true);
             Renderer.Camera.SetViewField(40, 30);
             Renderer.Camera.LookAt(new Vector2(15, 10));
@@ -42,19 +42,21 @@ namespace LiteGame
             CreateMap();
         }
 
+        ParticleList _exhaustParticles = new ParticleList(100);
+
         LoopedTerrain _terrain;
         void CreateMap()
         {
-            float circ = 100;
+            float circ = 400;
             float rad = circ / (float)Math.PI / 2;
-            _terrain = new LoopedTerrain(_world, (int)circ, 10);
+            _terrain = new LoopedTerrain(_world, (int)circ, 3);
             _ship.Position = new Vector2(0, -rad - 10);
             Renderer.Camera.LookAt(_ship.Position);
             GravityController gc = new GravityController(rad*5, 10000, 10);
 
             gc.Enabled = true;
             gc.AddPoint(new Vector2(0, 0));
-            _world.AddController(gc);
+            //_world.AddController(gc);
         }
 
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
@@ -89,15 +91,30 @@ namespace LiteGame
 
         protected override void DrawFrame(GameTime gameTime)
         {
-            Renderer.Clear(Color.LightBlue);
+            Renderer.Clear(Color.Black);
 
             Renderer.BeginDraw();
             _ship.Draw(Renderer);           
             _terrain.Draw(Renderer);
+
+            foreach (Particle p in _exhaustParticles.Particles)
+            {
+                Renderer.DrawSprite(_fireTexture, new RectangleF(p.Position.X, p.Position.Y, 0.2f, 0.2f), p.Life, (float)p.Life/100);
+            }
+
+
+            _numFrames++;
+
+            
+            Renderer.Begin();
+            string frameRate = _fps + " FPS";
+
+            Renderer.End();
+
             Renderer.EndDraw();
         }
 
-        protected override int OnKeyPress(Keys key)
+        protected override int OnKeyPress(Keys key, GameTime gameTime)
         {
             
             switch (key)
@@ -110,12 +127,19 @@ namespace LiteGame
                     return 0;
                 case Keys.Up:
                     _ship.ApplyForwardThrust(0.01f);
+                    //float m = Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f));
+                    //Vector2 vel = _ship.Velocity * m - _ship.Facing * 0.01f;
+                    //vel.X += Dice.Next() * 0.002f - 0.001f;
+                    //vel.Y += Dice.Next() * 0.002f - 0.001f;
+                    //_exhaustParticles.AddParticle(new Particle(_ship.Position - _ship.Facing * 0.4f, vel, 100)); // - _ship.Facing*0.1f
+
+
                     return 0;
                 case Keys.M:
                     UIManager.ShowDialog(_menu);
                     return -1;
             }
-            return base.OnKeyPress(key);
+            return base.OnKeyPress(key, gameTime);
         }
 
         protected override void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyHandler)
@@ -123,19 +147,34 @@ namespace LiteGame
             if (keyHandler.IsKeyDown(Keys.Escape))
                 Exit();
 
+            
             //Vector2 g = new Vector2(-_shipBody.Position.X, -_shipBody.Position.Y);
             //g.Normalize();
             //Physics.Gravity = g * 5;
+
+            //_exhaustParticles.Update();
 
             Vector2 dir = _ship.Position - Renderer.Camera.Position;
             if (dir.LengthSquared() > 0)
             {
                 //dir.Normalize();
-                Renderer.Camera.MoveBy(dir * 0.07f);
+                //Renderer.Camera.MoveBy(dir * 0.07f);
             }
             float angle = (float)Math.Atan2(_ship.Position.X, _ship.Position.Y);
-            Renderer.Camera.Angle = angle;
+            //Renderer.Camera.Angle = angle;
             _world.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
+
+            _frameTime += gameTime.ElapsedGameTime;
+
+            while (_frameTime > TimeSpan.FromSeconds(1))
+            {
+                _frameTime -= TimeSpan.FromSeconds(1);
+                _frameRate = _numFrames;
+                _numFrames = 0;
+            }
         }
+
+        int _frameRate,_numFrames=0;
+        TimeSpan _frameTime = TimeSpan.Zero;
     }
 }

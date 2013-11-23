@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace LiteEngine.Input
@@ -20,7 +21,7 @@ namespace LiteEngine.Input
 
         HashSet<Keys> _unpressedKeys = new HashSet<Keys>();
         KeyboardState _state;
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             _state = Keyboard.GetState();
             Keys[] pressedKeys = _state.GetPressedKeys();
@@ -41,7 +42,7 @@ namespace LiteEngine.Input
                 }
                 else
                 {
-                    timeout = OnKeyPressed(key);
+                    timeout = OnKeyPressed(key, gameTime);
                     _keyTimeout[key] = timeout;
                 }
             }
@@ -54,7 +55,7 @@ namespace LiteEngine.Input
         }
 
         public event OnKeyPressedHandler OnKeyPressed;
-        public delegate int OnKeyPressedHandler(Keys key);
+        public delegate int OnKeyPressedHandler(Keys key, GameTime gameTime);
 
         internal void UnpressKeys()
         {

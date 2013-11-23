@@ -26,13 +26,13 @@ namespace LiteGame
             _texture = new Texture("pausemenu");
 
 
-            for (int y = 0; y < _height; y++)
+            for (int y = 1; y < _height; y++)
                 for (int x = 0; x < _width; x++) //-5; x < 10; x++) //
                 {
-                    if (x == 2)
+                    //if (x == 2)
+                      //  continue;
+                    if (Dice.Next(5) == 0 && y == 1)
                         continue;
-                    //if (Dice.Next(30) == 0 && y == 0)
-                    //    continue;
                     int lx = x;
                     if (lx < 0)
                         lx += _width;
@@ -45,7 +45,7 @@ namespace LiteGame
 
                     Body b = BodyFactory.CreateRectangle(world, 1f, 1f, 1f);
                     b.IsStatic = true;
-                    b.Restitution = 0.2f;
+                    b.Restitution = 0.5f;
                     b.Friction = 0.3f;
                     b.Rotation = angle;
                     b.Position = new Vector2(px, py);
@@ -64,7 +64,7 @@ namespace LiteGame
             int viewCenterX = (int)(angle / (Math.PI * 2) * _width);
 
             for (int y = 0; y < _height; y++)
-                for (int x = viewCenterX - (int)Renderer.Camera.ViewWidth / 2; x < viewCenterX + Renderer.Camera.ViewWidth / 2; x++)
+                for (int x = viewCenterX - (int)Renderer.Camera.ViewWidth / 2 - 1; x <= viewCenterX + Renderer.Camera.ViewWidth / 2 + 1; x++)
                 {
                     int realX = (x % _width + _width) % _width;
 
