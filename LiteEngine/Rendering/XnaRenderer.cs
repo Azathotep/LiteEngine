@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using LiteEngine.Math;
@@ -103,20 +104,25 @@ namespace LiteEngine.Rendering
 
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation, float alpha)
         {
-            DrawSprite(texture, center, DrawDepth, rotation, new Vector2F(0.5f, 0.5f), Color.White * 3);
+            DrawSprite(texture, center, DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White * alpha);
+        }
+
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation, Color color, float alpha)
+        {
+            DrawSprite(texture, center, DrawDepth, rotation, new Vector2(0.5f, 0.5f), new Color(color * alpha, alpha));
         }
 
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation)
         {
-            DrawSprite(texture, center, DrawDepth, rotation, new Vector2F(0.5f, 0.5f), Color.White);
+            DrawSprite(texture, center, DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White);
         }
 
         public void DrawExactSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
         {
-            DrawSprite(texture, position, DrawDepth, rotation, new Vector2F(0f, 0f), Color.White);
+            DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), Color.White);
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2F origin, Color color, bool flipHorizontal = false)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false)
         {
             Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
 
@@ -153,6 +159,51 @@ namespace LiteEngine.Rendering
         internal void End()
         {
             _spriteBatch.End();
+        }
+
+        public Vector2 MeasureString(string text)
+        {
+            SpriteFont font = _contentManager.Load<SpriteFont>("Font");
+            return font.MeasureString(text);
+        }
+
+        public RectangleF DrawStringBox(string text, RectangleF bounds, Color color, bool rightAlign = false)
+        {
+            SpriteFont font = _contentManager.Load<SpriteFont>("Font");
+            float screenWidth = bounds.Width; //ViewWidth;
+            float screenHeight = bounds.Height; //ViewHeight;
+            string[] words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string drawString = "";
+            string lineSoFar = "";
+            string linePlusWord = "";
+            foreach (string word in words)
+            {
+                if (lineSoFar.Length > 0)
+                    linePlusWord += " ";
+                linePlusWord += word;
+                Vector2 newSize = font.MeasureString(linePlusWord);
+                if (newSize.X >= screenWidth)
+                {
+                    drawString += lineSoFar + Environment.NewLine;
+                    lineSoFar = word;
+                    linePlusWord = lineSoFar;
+                }
+                else
+                    lineSoFar = linePlusWord;
+            }
+            if (lineSoFar.Length > 0)
+                drawString += lineSoFar;
+
+            //Vector2 worldPos = ScreenToWorld(bounds.X, bounds.Y);
+            Vector2 worldPos = new Vector2(bounds.X, bounds.Y);
+            float _worldScreenScale = 1f; // 0.04f;
+            _spriteBatch.DrawString(font, drawString, worldPos, color, 0, Vector2.Zero, _worldScreenScale, SpriteEffects.None, 0.1f);
+            return bounds;
+        }
+
+        public void BeginDrawToScreen()
+        {
+            _spriteBatch.Begin();
         }
     }
 }

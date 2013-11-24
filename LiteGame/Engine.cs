@@ -39,24 +39,24 @@ namespace LiteGame
 
             //Physics.ContactManager.PostSolve += PostSolve;
 
-            CreateMap();
+            CreatePlanet();
         }
 
         ParticleList _exhaustParticles = new ParticleList(100);
 
-        LoopedTerrain _terrain;
-        void CreateMap()
+        Planet _planet;
+        void CreatePlanet()
         {
             float circ = 400;
             float rad = circ / (float)Math.PI / 2;
-            _terrain = new LoopedTerrain(_world, (int)circ, 3);
+            _planet = new Planet(_world, (int)circ, 3);
             _ship.Position = new Vector2(0, -rad - 10);
             Renderer.Camera.LookAt(_ship.Position);
             GravityController gc = new GravityController(rad*5, 10000, 10);
 
             gc.Enabled = true;
             gc.AddPoint(new Vector2(0, 0));
-            //_world.AddController(gc);
+            _world.AddController(gc);
         }
 
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
@@ -95,28 +95,27 @@ namespace LiteGame
 
             Renderer.BeginDraw();
             _ship.Draw(Renderer);           
-            _terrain.Draw(Renderer);
+            _planet.Draw(Renderer);
 
             foreach (Particle p in _exhaustParticles.Particles)
             {
-                Renderer.DrawSprite(_fireTexture, new RectangleF(p.Position.X, p.Position.Y, 0.2f, 0.2f), p.Life, (float)p.Life/100);
+                float particleSize = 0.25f * (p.Life / 50f); // p.Life / 100f * 0.4f; // 0.2f;
+                float alpha = (float)p.Life * p.Life / (50 * 50);
+                Color color = new Color(1, 1, (float)p.Life / 60f);
+                //Renderer.DrawSprite(_fireTexture, new RectangleF(p.Position.X, p.Position.Y, particleSize, particleSize), 0.1f, 0f, new Vector2(0.5f, 0.5f), new Color(1, (float)p.Life/50, (float)p.Life / 30, (float)p.Life / 50)); //, alpha);
+                Renderer.DrawSprite(_fireTexture, new RectangleF(p.Position.X, p.Position.Y, particleSize, particleSize), 0.1f, color, alpha); //, alpha);
             }
 
-
-            _numFrames++;
-
-            
-            Renderer.Begin();
-            string frameRate = _fps + " FPS";
-
-            Renderer.End();
-
+            Renderer.EndDraw();
+            _numFrames++;            
+            Renderer.BeginDrawToScreen();
+            string frameRate = _frameRate + " FPS";
+            Renderer.DrawStringBox(frameRate, new RectangleF(10, 10, 120, 10), Color.White);
             Renderer.EndDraw();
         }
 
         protected override int OnKeyPress(Keys key, GameTime gameTime)
         {
-            
             switch (key)
             {
                 case Keys.Left:
@@ -127,13 +126,21 @@ namespace LiteGame
                     return 0;
                 case Keys.Up:
                     _ship.ApplyForwardThrust(0.01f);
-                    //float m = Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f));
-                    //Vector2 vel = _ship.Velocity * m - _ship.Facing * 0.01f;
-                    //vel.X += Dice.Next() * 0.002f - 0.001f;
-                    //vel.Y += Dice.Next() * 0.002f - 0.001f;
-                    //_exhaustParticles.AddParticle(new Particle(_ship.Position - _ship.Facing * 0.4f, vel, 100)); // - _ship.Facing*0.1f
-
-
+                    float m = Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f));
+                    Vector2 vel = _ship.Velocity * m - _ship.Facing * 0.1f;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector2 v = vel + -_ship.Facing * i * 0.01f;
+                        v.X += Dice.Next() * 0.01f - 0.005f;
+                        v.Y += Dice.Next() * 0.01f - 0.005f;
+                        float f = Dice.Next();
+                        Color color = Color.Yellow;
+                        //if (Dice.Next(2) == 0)
+                            color = new Color(1, f, f, 1f);
+                        //else
+                        //    color = new Color(1, 1, f, 1f);
+                        _exhaustParticles.AddParticle(new Particle(_ship.Position - _ship.Facing * 0.5f, v, color, 50)); // - _ship.Facing*0.1f
+                    }
                     return 0;
                 case Keys.M:
                     UIManager.ShowDialog(_menu);
@@ -146,22 +153,19 @@ namespace LiteGame
         {
             if (keyHandler.IsKeyDown(Keys.Escape))
                 Exit();
-
-            
             //Vector2 g = new Vector2(-_shipBody.Position.X, -_shipBody.Position.Y);
             //g.Normalize();
             //Physics.Gravity = g * 5;
 
-            //_exhaustParticles.Update();
+            _exhaustParticles.Update();
 
             Vector2 dir = _ship.Position - Renderer.Camera.Position;
             if (dir.LengthSquared() > 0)
             {
-                //dir.Normalize();
-                //Renderer.Camera.MoveBy(dir * 0.07f);
+                Renderer.Camera.MoveBy(dir * 0.07f);
             }
             float angle = (float)Math.Atan2(_ship.Position.X, _ship.Position.Y);
-            //Renderer.Camera.Angle = angle;
+            Renderer.Camera.Angle = angle;
             _world.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
 
             _frameTime += gameTime.ElapsedGameTime;

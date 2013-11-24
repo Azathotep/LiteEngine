@@ -33,7 +33,6 @@ namespace LiteEngine.UI
             Matrix view = Matrix.CreateLookAt(new Vector3(renderer.ScreenWidth / 2, renderer.ScreenHeight/2, -1), new Vector3(renderer.ScreenWidth / 2, renderer.ScreenHeight / 2, 0), new Vector3(0, -1, 0));
 
             renderer.Begin(world, projection, view);
-            
             foreach (Dialog dialog in _shownDialogs)
                 dialog.Render(renderer);
             renderer.End();
