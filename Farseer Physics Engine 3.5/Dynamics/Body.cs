@@ -832,7 +832,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="force">The force.</param>
         public void ApplyForce(ref Vector2 force)
         {
-            ApplyForce(ref force, ref _sweep.C); //_xf.p);
+            ApplyForce(ref force, ref _sweep.C);
         }
 
         /// <summary>
