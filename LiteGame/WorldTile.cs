@@ -14,6 +14,7 @@ namespace LiteGame
     class WorldTile
     {
         static Texture _texture = new Texture("ground");
+        static Texture _grass = new Texture("grass");
         float _angle;
         Vector2 _position;
         public WorldTile(float positionX, float positionY, float angle)
@@ -24,7 +25,13 @@ namespace LiteGame
 
         public void Draw(XnaRenderer renderer)
         {
-            renderer.DrawSprite(_texture, new LiteEngine.Math.RectangleF(_position.X, _position.Y, 1, 1), _angle);
+            Texture texture = _texture;
+            if (Ground)
+                texture = _grass;
+            renderer.DrawSprite(texture, new LiteEngine.Math.RectangleF(_position.X, _position.Y, 1, 1), _angle);
+            
         }
+
+        public bool Ground { get; set; }
     }
 }

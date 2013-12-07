@@ -19,12 +19,31 @@ namespace LiteEngine.Rendering
         SpriteBatch _spriteBatch;
         GameWindow _window;
 
+        RenderTarget2D _target1;
+
         public XnaRenderer(GraphicsDeviceManager deviceManager, ContentManager contentManager, GameWindow window)
         {
             _deviceManager = deviceManager;
             _contentManager = contentManager;
             _window = window;
-            DrawDepth = 1;
+            DrawDepth = 1;            
+        }
+
+        public RenderTarget2D CreateRenderTarget(int width, int height)
+        {
+            var pp = _deviceManager.GraphicsDevice.PresentationParameters;
+            RenderTarget2D ret = new RenderTarget2D(_deviceManager.GraphicsDevice,
+                                 width, //Same width as backbuffer
+                                 height, //Same height
+                                 false, //No mip-mapping
+                                 pp.BackBufferFormat, //Same colour format
+                                 pp.DepthStencilFormat); //Same depth stencil
+            return ret;
+        }
+
+        public void UseRenderTarget(RenderTarget2D target)
+        {
+            _deviceManager.GraphicsDevice.SetRenderTarget(target);
         }
 
         public void SetDeviceMode(int width, int height, bool fullscreen)
@@ -83,7 +102,6 @@ namespace LiteEngine.Rendering
         public void Clear(Color color)
         {
             _deviceManager.GraphicsDevice.Clear(ClearOptions.DepthBuffer | ClearOptions.Target, color, 1, 0);
-            _deviceManager.GraphicsDevice.SetRenderTarget(null);
         }
 
         public void BeginDraw()
@@ -125,10 +143,14 @@ namespace LiteEngine.Rendering
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false)
         {
             Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
-
             Rectangle sourceRect = xnaTexture.Bounds;
             if (texture.Bounds.HasValue)
                 sourceRect = new Rectangle(texture.Bounds.Value.X, texture.Bounds.Value.Y, texture.Bounds.Value.Width, texture.Bounds.Value.Height);
+            DrawSprite(xnaTexture, sourceRect, position, drawDepth, rotation, origin, color, flipHorizontal);
+        }
+
+        public void DrawSprite(Texture2D texture, Rectangle sourceRect, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false)
+        {
             float scaleW = 1 / (float)sourceRect.Width * position.Width;
             float scaleH = 1 / (float)sourceRect.Height * position.Height;
 
@@ -138,8 +160,7 @@ namespace LiteEngine.Rendering
             SpriteEffects effects = SpriteEffects.None;
             if (flipHorizontal)
                 effects = SpriteEffects.FlipHorizontally;
-
-            _spriteBatch.Draw(xnaTexture, new Vector2(position.X, position.Y), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), new Vector2(scaleW, scaleH), effects, drawDepth);
+            _spriteBatch.Draw(texture, new Vector2(position.X, position.Y), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), new Vector2(scaleW, scaleH), effects, drawDepth);
         }
 
         internal void Initialize()

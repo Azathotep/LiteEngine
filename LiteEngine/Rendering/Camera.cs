@@ -94,7 +94,7 @@ namespace LiteEngine.Rendering
             set
             {
                 _angle = value;
-                _view = Matrix.CreateLookAt(new Vector3(_position, -1), new Vector3(_position, 0), new Vector3((float)System.Math.Sin(value), (float)System.Math.Cos(value), 0));
+                _view = Matrix.CreateLookAt(new Vector3(_position, -1), new Vector3(_position, 0), new Vector3((float)System.Math.Sin(value), -(float)System.Math.Cos(value), 0));
             }
             get
             {

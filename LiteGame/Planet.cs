@@ -13,8 +13,6 @@ namespace LiteGame
 {
     class Planet
     {
-        Texture _texture;
-
         WorldTile[,] _tiles;
         int _height;
         int _width;
@@ -23,14 +21,11 @@ namespace LiteGame
             _tiles = new WorldTile[width, height];
             _height = height;
             _width = width;
-            _texture = new Texture("pausemenu");
 
 
             for (int y = 1; y < _height; y++)
                 for (int x = 0; x < _width; x++) //-5; x < 10; x++) //
                 {
-                    //if (x == 2)
-                    //  continue;
                     if (Dice.Next(5) == 0 && y == 1)
                         continue;
                     int lx = x;
@@ -42,37 +37,59 @@ namespace LiteGame
                     float px = (float)Math.Sin(angle) * radius;
                     float py = -(float)Math.Cos(angle) * radius;
                     _tiles[lx, y] = new WorldTile(px, py, angle);
-
-                    Body b = BodyFactory.CreateRectangle(world, 1f, 1f, 1f);
-                    b.IsStatic = true;
-                    b.Restitution = 0.5f;
-                    b.Friction = 0.3f;
-                    b.Rotation = angle;
-                    b.Position = new Vector2(px, py);
+                    if (Dice.Next(2) == 0)
+                        _tiles[lx, y].Ground = true;
+                    //Body b = BodyFactory.CreateRectangle(world, 1f, 1f, 1f);
+                    //b.IsStatic = true;
+                    //b.Restitution = 0.5f;
+                    //b.Friction = 0.3f;
+                    //b.Rotation = angle;
+                    //b.Position = new Vector2(px, py);
                 }
         }
 
-        internal void Draw(XnaRenderer Renderer)
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            
+
+        internal void Draw(XnaRenderer Renderer, float angle)
         {
+            sw.Reset();
+            sw.Start();
             //float angle = Renderer.Camera.Angle;
             //if (angle >= Math.PI)
             //    angle -= (float)Math.PI;
             //int viewCenterX = (int)(MathHelper.WrapAngle(angle) / (Math.PI * 2) * _width); // (int)Renderer.Camera.Position.X;
 
-            float angle = (float)Math.Atan2(Renderer.Camera.Position.X, -Renderer.Camera.Position.Y);
+            //float angle = 0;// (float)Math.Atan2(Renderer.Camera.Position.X, -Renderer.Camera.Position.Y);
+            List<WorldTile> grass = new List<WorldTile>();
+            List<WorldTile> ground = new List<WorldTile>();
 
+            int side = 2;
+            _height = 40;
             int viewCenterX = (int)(angle / (Math.PI * 2) * _width);
-
             for (int y = 0; y < _height; y++)
-                for (int x = viewCenterX - (int)Renderer.Camera.ViewWidth / 2 - 1; x <= viewCenterX + Renderer.Camera.ViewWidth / 2 + 1; x++)
+                for (int x = viewCenterX - (int)Renderer.Camera.ViewWidth / 2 - side; x <= viewCenterX + Renderer.Camera.ViewWidth / 2 + side; x++)
                 {
                     int realX = (x % _width + _width) % _width;
-
                     WorldTile tile = _tiles[realX, y];
                     if (tile == null)
                         continue;
-                    tile.Draw(Renderer);
+                    if (tile.Ground)
+                        ground.Add(tile);
+                    else
+                        grass.Add(tile);
+                    //tile.Draw(Renderer);
                 }
+            foreach (WorldTile tile in grass) //.Take(2500)
+                tile.Draw(Renderer);
+            foreach (WorldTile tile in ground)
+                tile.Draw(Renderer);
+
+            int c = grass.Count + ground.Count;
+
+            sw.Stop();
+            ms.Add(sw.ElapsedMilliseconds);
         }
+        List<long> ms = new List<long>();
     }
 }

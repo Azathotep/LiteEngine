@@ -23,9 +23,9 @@ namespace LiteGame
             _body.BodyType = BodyType.Dynamic;
             _body.AngularDamping = 0.5f;
             _body.Friction = 1f;
-            _body.Restitution = 0f; // 1f;
+            _body.Restitution = 0f;
             _body.Mass = 0.5f;
-            _body.Rotation = 0.1f;
+            _body.Rotation = 0f;
             _f = FixtureFactory.AttachPolygon(new Vertices(new Vector2[] { new Vector2(0f, -0.4f), new Vector2(0.35f, 0.4f), new Vector2(-0.35f, 0.4f) }), 1f, _body);
 
         }
@@ -56,11 +56,7 @@ namespace LiteGame
         {
             get
             {
-                if (_body.LinearVelocity.Length() > 2)
-                {
-                    int a = 1;
-                }
-                return _body.LinearVelocity;// / 55;
+                return _body.LinearVelocity;
             }
         }
 
@@ -78,7 +74,7 @@ namespace LiteGame
 
         internal void Draw(XnaRenderer renderer)
         {
-            renderer.DrawSprite(_texture, new RectangleF(Position.X, Position.Y, 1, 1), Rotation);
+            renderer.DrawSprite(_texture, new RectangleF(Position.X, Position.Y, 0.5f, 0.5f), Rotation);
         }
 
         internal void RotateThrusters(float amount)
