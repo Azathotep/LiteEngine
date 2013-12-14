@@ -71,5 +71,37 @@
                 _height = value;
             }
         }
+
+        public float Left
+        {
+            get
+            {
+                return _x;
+            }
+        }
+
+        public float Top
+        {
+            get
+            {
+                return _y;
+            }
+        }
+
+        public float Right
+        {
+            get
+            {
+                return _x + _width;
+            }
+        }
+
+        public float Bottom
+        {
+            get
+            {
+                return _y + _height;
+            }
+        }
     }  
 }
