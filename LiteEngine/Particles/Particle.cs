@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using LiteEngine.Physics;
+using LiteEngine.Rendering;
+using LiteEngine.Textures;
+using LiteEngine.Math;
 
 namespace LiteEngine.Particles
 {
@@ -13,6 +16,7 @@ namespace LiteEngine.Particles
     {
         Body _body;
         public int Life;
+        static Texture _particleTexture = new Texture("particle");
 
         public Vector2 Position
         {
@@ -74,6 +78,11 @@ namespace LiteEngine.Particles
         {
             //disable the body so the particle no longer interacts in the physics system
             _body.Enabled = false;
+        }
+
+        public void Draw(XnaRenderer renderer, float particleSize, Color color, float alpha)
+        {
+            renderer.DrawSprite(_particleTexture, new RectangleF(Position.X, Position.Y, particleSize, particleSize), 0, color, alpha);
         }
     }
 }
