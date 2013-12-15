@@ -84,8 +84,32 @@ namespace LiteEngine.Xna
             }
         }
 
+        int _numFrames;
+        TimeSpan _frameTime;
+        int _frameRate;
+
+        /// <summary>
+        /// Returns the framerate in FPS
+        /// </summary>
+        public int FrameRate
+        {
+            get
+            {
+                return _frameRate;
+            }
+        }
+
         protected sealed override void Draw(GameTime gameTime)
         {
+            _numFrames++;
+            _frameTime += gameTime.ElapsedGameTime;
+            while (_frameTime > TimeSpan.FromSeconds(1))
+            {
+                _frameTime -= TimeSpan.FromSeconds(1);
+                _frameRate = _numFrames;
+                _numFrames = 0;
+            }
+
             DrawFrame(gameTime);
             _ui.RenderUI(_renderer);
             base.Draw(gameTime);

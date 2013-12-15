@@ -29,5 +29,10 @@ namespace LiteEngine.Physics
         {
             return BodyFactory.CreateBody(_world);
         }
+
+        public Body CreateRectangleBody(float width, float height, float density)
+        {
+            return BodyFactory.CreateRectangle(_world, width, height, density);
+        }
     }
 }
