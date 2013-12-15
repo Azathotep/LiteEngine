@@ -38,6 +38,17 @@ namespace LiteEngine.Xna
             return OnKeyPress(key, gameTime);
         }
 
+        /// <summary>
+        /// Returns an interface to the physics engine
+        /// </summary>
+        public PhysicsCore Physics
+        {
+            get
+            {
+                return _physics;
+            }
+        }
+
         protected virtual int OnKeyPress(Keys key, GameTime gameTime)
         {
             return 0;
@@ -52,9 +63,25 @@ namespace LiteEngine.Xna
         protected sealed override void Update(GameTime gameTime)
         {
             _keyboardHandler.Update(gameTime);
-            _physics.Update();
+            _physics.Update(System.Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
             UpdateFrame(gameTime, _keyboardHandler);
             base.Update(gameTime);
+        }
+
+        bool _physicsEnabled = true;
+        /// <summary>
+        /// If true physics updates are made by the engine each update frame
+        /// </summary>
+        public bool PhysicsEnabled
+        {
+            get
+            {
+                return _physicsEnabled;
+            }
+            set
+            {
+                _physicsEnabled = value;
+            }
         }
 
         protected sealed override void Draw(GameTime gameTime)

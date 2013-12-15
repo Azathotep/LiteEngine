@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using FarseerPhysics.Common;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics;
@@ -9,13 +10,24 @@ using FarseerPhysics.Dynamics;
 namespace LiteEngine.Physics
 {
     /// <summary>
-    /// Provides an abstraction of the farseer physics engine
+    /// Provides an abstraction layer over the farseer physics engine
     /// </summary>
-    class PhysicsCore
+    public class PhysicsCore
     {
-        internal void Update()
+        World _world;
+        public PhysicsCore()
         {
-            throw new NotImplementedException();
+            _world = new World(Vector2.Zero);
+        }
+
+        internal void Update(float step)
+        {
+            _world.Step(step);    
+        }
+
+        public Body CreateBody()
+        {
+            return BodyFactory.CreateBody(_world);
         }
     }
 }
