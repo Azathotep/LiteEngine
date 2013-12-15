@@ -20,6 +20,11 @@ namespace LiteEngine.Physics
             _world = new World(Vector2.Zero);
         }
 
+        public void SetGlobalGravity(Vector2 force)
+        {
+            _world.Gravity = force;
+        }
+
         internal void Update(float step)
         {
             _world.Step(step);    
