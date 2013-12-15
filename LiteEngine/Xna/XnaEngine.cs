@@ -8,6 +8,7 @@ using LiteEngine.Rendering;
 using LiteEngine.Input;
 using LiteEngine.UI;
 using LiteEngine.Physics;
+using LiteEngine.Particles;
 
 namespace LiteEngine.Xna
 {
@@ -18,10 +19,12 @@ namespace LiteEngine.Xna
         XnaKeyboardHandler _keyboardHandler;
         GraphicsDeviceManager _graphics;
         UIManager _ui;
-
+        ParticleSystem _particleSystem;
+        
         public LiteXnaEngine()
         {
             _physics = new PhysicsCore();
+            _particleSystem = new ParticleSystem(_physics);
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             _renderer = new XnaRenderer(_graphics, Content, Window);
@@ -49,6 +52,14 @@ namespace LiteEngine.Xna
             }
         }
 
+        public ParticleSystem ParticleSystem
+        {
+            get
+            {
+                return _particleSystem;
+            }
+        }
+
         protected virtual int OnKeyPress(Keys key, GameTime gameTime)
         {
             return 0;
@@ -64,6 +75,7 @@ namespace LiteEngine.Xna
         {
             _keyboardHandler.Update(gameTime);
             _physics.Update(System.Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
+            _particleSystem.Update();
             UpdateFrame(gameTime, _keyboardHandler);
             base.Update(gameTime);
         }
