@@ -15,7 +15,7 @@ namespace LiteEngine.Particles
         PhysicsCore _physics;
         LinkedList<Particle> _activeParticles = new LinkedList<Particle>();
         Queue<Particle> _unusedParticles = new Queue<Particle>();
-        int _maxActiveParticles = 500;
+        int _maxActiveParticles = 800;
 
         public ParticleSystem(PhysicsCore physics)
         {
