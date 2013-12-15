@@ -7,11 +7,13 @@ using Microsoft.Xna.Framework.Input;
 using LiteEngine.Rendering;
 using LiteEngine.Input;
 using LiteEngine.UI;
+using LiteEngine.Physics;
 
 namespace LiteEngine.Xna
 {
     public abstract class LiteXnaEngine : Game
     {
+        PhysicsCore _physics;
         XnaRenderer _renderer;
         XnaKeyboardHandler _keyboardHandler;
         GraphicsDeviceManager _graphics;
@@ -19,6 +21,7 @@ namespace LiteEngine.Xna
 
         public LiteXnaEngine()
         {
+            _physics = new PhysicsCore();
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             _renderer = new XnaRenderer(_graphics, Content, Window);
@@ -49,6 +52,7 @@ namespace LiteEngine.Xna
         protected sealed override void Update(GameTime gameTime)
         {
             _keyboardHandler.Update(gameTime);
+            _physics.Update();
             UpdateFrame(gameTime, _keyboardHandler);
             base.Update(gameTime);
         }
