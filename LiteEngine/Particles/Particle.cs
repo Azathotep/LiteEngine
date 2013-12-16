@@ -57,6 +57,7 @@ namespace LiteEngine.Particles
             _body.Restitution = 0.1f;
             _body.Position = position;
             _body.LinearVelocity = velocity;
+            _body.IgnoreGravity = true;
             _body.FixedRotation = true;
             _body.LinearDamping = 0.1f;
             if (collidesWithWorld)
