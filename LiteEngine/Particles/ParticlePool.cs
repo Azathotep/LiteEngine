@@ -52,11 +52,12 @@ namespace LiteEngine.Particles
         /// <param name="velocity"></param>
         /// <param name="life"></param>
         /// <param name="collidesWithWorld">whether the particle should collide with world objects</param>
-        public void CreateParticle(Vector2 position, Vector2 velocity, int life, bool collidesWithWorld)
+        public Particle CreateParticle(Vector2 position, Vector2 velocity, int life, bool collidesWithWorld)
         {
             Particle particle = _system.CreateParticle(position, velocity, life, collidesWithWorld);
             if (particle != null)
                 _activeParticles.Add(particle);
+            return particle;
         }
     }
 }

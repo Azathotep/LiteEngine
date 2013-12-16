@@ -68,6 +68,7 @@
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticlePool.cs" />
     <Compile Include="Particles\ParticleSystem.cs" />
+    <Compile Include="Physics\PhysicsObject.cs" />
     <Compile Include="Physics\PhysicsCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Camera.cs" />

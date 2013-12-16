@@ -25,16 +25,19 @@ namespace LiteEngine.Physics
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             Body body = contact.FixtureA.Body;
-            Action<float> callback;
-            if (!_collisionCallbacks.TryGetValue(body, out callback))
-                return;
-            float maxImpulse=0;
-            int count = contact.Manifold.PointCount;
-            for (int i = 0; i < count; ++i)
+            PhysicsObject pb1 = contact.FixtureA.Body.UserData as PhysicsObject;
+            PhysicsObject pb2 = contact.FixtureB.Body.UserData as PhysicsObject;
+            if (pb1 != null || pb2 != null)
             {
-                maxImpulse = System.Math.Max(maxImpulse, impulse.points[i].normalImpulse);
+                float maxImpulse = 0;
+                int count = contact.Manifold.PointCount;
+                for (int i = 0; i < count; ++i)
+                    maxImpulse = System.Math.Max(maxImpulse, impulse.points[i].normalImpulse);
+                if (pb2 != null)
+                    pb2.Collision(maxImpulse);
+                if (pb1 != null)
+                    pb1.Collision(maxImpulse);
             }
-            callback.Invoke(maxImpulse);
         }
 
         public void SetGlobalGravity(Vector2 force)
@@ -47,21 +50,21 @@ namespace LiteEngine.Physics
             _world.Step(step);    
         }
 
-        public Body CreateBody()
+        public PhysicsObject CreateBody()
         {
-            return BodyFactory.CreateBody(_world);
+            return new PhysicsObject(BodyFactory.CreateBody(_world));
         }
 
-        public Body CreateRectangleBody(float width, float height, float density)
+        public PhysicsObject CreateRectangleBody(float width, float height, float density)
         {
-            return BodyFactory.CreateRectangle(_world, width, height, density);
-        }
-
-
-        Dictionary<Body, Action<float>> _collisionCallbacks = new Dictionary<Body, Action<float>>();
-        public void RegisterCollisionCallback(Body body, Action<float> collisionCallback)
-        {
-            _collisionCallbacks[body] = collisionCallback;
+            return new PhysicsObject(BodyFactory.CreateRectangle(_world, width, height, density));
         }
     }
+
+    /// <summary>
+    /// Delegate for collision handlers
+    /// </summary>
+    /// <param name="impulse">impulse of the collision, more = greater impact</param>
+    /// <returns>if true the collision handler is deregistered for the body</returns>
+    public delegate void CollisionCallbackHandler(float impulse);
 }
