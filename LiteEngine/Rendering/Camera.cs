@@ -15,16 +15,33 @@ namespace LiteEngine.Rendering
 
         public Camera()
         {
-            SetViewField(20, 15);
+            SetAspect(20, 15);
         }
 
         Vector2 _position;
-
         public Vector2 Position
         {
             get
             {
                 return _position;
+            }
+        }
+
+        float _angle;
+        public float Angle
+        {
+            get
+            {
+                return _angle;
+            }
+        }
+
+        float _zoom = 1;
+        public float Zoom
+        {
+            get
+            {
+                return _zoom;
             }
         }
 
@@ -52,31 +69,44 @@ namespace LiteEngine.Rendering
             }
         }
 
-        public void LookAt(Vector2 position)
+        public void LookAt(Vector2 position, float angle=0)
         {
             _position = position;
-            _view = Matrix.CreateLookAt(new Vector3(position, -1), new Vector3(position, 0), new Vector3(0, -1, 0));
+            _angle = angle;
+            Vector3 up = new Vector3((float)System.Math.Sin(angle), -(float)System.Math.Cos(angle), 0);
+            _view = Matrix.CreateLookAt(new Vector3(position, -1), new Vector3(position, 0), up);
+        }
+
+        public void ChangeZoom(float newZoom)
+        {
+            _zoom = newZoom;
+            Vector2 viewExtent = _aspect * _zoom;
+            _projection = Matrix.CreateOrthographic(viewExtent.X, viewExtent.Y, -1000.5f, 100);
         }
 
         public void MoveBy(Vector2 offset)
         {
-            LookAt(_position + offset);
+            LookAt(_position + offset, _angle);
         }
 
-        Vector2 _viewField;
-
-        public void SetViewField(float viewWidth, float viewHeight)
+        Vector2 _aspect;
+        /// <summary>
+        /// Sets the view width and height (in world space) for zoom=1
+        /// </summary>
+        /// <param name="viewWidth"></param>
+        /// <param name="viewHeight"></param>
+        public void SetAspect(float width, float height)
         {
-            _viewField = new Vector2(viewWidth, viewHeight);
-            _world = Matrix.Identity;
-            _projection = Matrix.CreateOrthographic(viewWidth, viewHeight, -1000.5f, 100);
+            _aspect = new Vector2(width, height);
+            //force projection recalculation
+            ChangeZoom(_zoom);
         }
 
         public float ViewWidth
         {
             get
             {
-                return _viewField.X;
+                return _aspect.X * _zoom;
             }
         }
 
@@ -84,21 +114,7 @@ namespace LiteEngine.Rendering
         {
             get
             {
-                return _viewField.Y;
-            }
-        }
-
-        float _angle;
-        public float Angle 
-        { 
-            set
-            {
-                _angle = value;
-                _view = Matrix.CreateLookAt(new Vector3(_position, -1), new Vector3(_position, 0), new Vector3((float)System.Math.Sin(value), -(float)System.Math.Cos(value), 0));
-            }
-            get
-            {
-                return _angle;
+                return _aspect.Y * _zoom;
             }
         }
     }
