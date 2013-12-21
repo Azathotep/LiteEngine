@@ -12,9 +12,9 @@ using LiteEngine.Math;
 
 namespace LiteEngine.Particles
 {
-    public class Particle
+    public class Particle : IPhysicsObject
     {
-        PhysicsObject _physicsBody;
+        Body _body;
         public int Life;
         static Texture _particleTexture = new Texture("particle");
 
@@ -22,7 +22,7 @@ namespace LiteEngine.Particles
         {
             get
             {
-                return Body.Position;
+                return _body.Position;
             }
         }
 
@@ -34,7 +34,7 @@ namespace LiteEngine.Particles
         {
             get
             {
-                return _physicsBody.Body;
+                return _body;
             }
         }
 
@@ -42,7 +42,7 @@ namespace LiteEngine.Particles
         {
             get
             {
-                return Body.LinearVelocity;
+                return _body.LinearVelocity;
             }
         }
 
@@ -56,19 +56,15 @@ namespace LiteEngine.Particles
         /// <param name="life">lifetime of the particle, before it is removed from the world</param>
         internal void Initialize(PhysicsCore physics, Vector2 position, Vector2 velocity, int life, bool collidesWithWorld)
         {
-            if (_physicsBody == null)
+            if (_body == null)
             {
-                _physicsBody = physics.CreateBody();
-                Fixture f = FixtureFactory.AttachCircle(0.01f, 1f, _physicsBody.Body, Vector2.Zero);
+                _body = physics.CreateBody(this);
+                Fixture f = FixtureFactory.AttachCircle(0.01f, 1f, _body, Vector2.Zero);
                 f.CollisionCategories = Category.Cat2;
                 f.CollidesWith = Category.Cat1;
             }
-            else
-            {
-                //reset the collision callback
-                _physicsBody.SetCollisionCallback(null);
-            }
-            Body body = _physicsBody.Body;
+
+            Body body = _body;
             //disable the body so that it doesn't collide before it has been initialized
             body.Enabled = false;
             body.BodyType = BodyType.Dynamic;
@@ -98,7 +94,8 @@ namespace LiteEngine.Particles
         internal void Deinitialize()
         {
             //disable the body so the particle no longer interacts in the physics system
-            _physicsBody.Body.Enabled = false;
+            _body.Enabled = false;
+            OnCollideWithOther = null;
         }
 
         public void Draw(XnaRenderer renderer, float particleSize, Color color, float alpha)
@@ -106,13 +103,19 @@ namespace LiteEngine.Particles
             renderer.DrawSprite(_particleTexture, new RectangleF(Position.X, Position.Y, particleSize, particleSize), 0, color, alpha);
         }
 
-        /// <summary>
-        /// Sets a callback to invoke when the particle collides with another body
-        /// </summary>
-        /// <param name="collisionCallbackHandler"></param>
-        public void SetCollisionCallback(CollisionCallbackHandler collisionCallbackHandler)
+        public void OnCollideWith(IPhysicsObject self, IPhysicsObject other, float impulse)
         {
-            _physicsBody.SetCollisionCallback(collisionCallbackHandler);
+            if (OnCollideWithOther != null)
+            {
+                Particle particle = self as Particle;
+                OnCollideWithOther(particle, other, impulse);
+                return;
+            }
+            Life = 0;
         }
+
+        public event OnCollideWithHandler OnCollideWithOther;
     }
+
+    public delegate void OnCollideWithHandler(Particle particle, IPhysicsObject other, float impulse);
 }

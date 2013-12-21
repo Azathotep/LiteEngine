@@ -25,8 +25,8 @@ namespace LiteEngine.Physics
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             Body body = contact.FixtureA.Body;
-            PhysicsObject pb1 = contact.FixtureA.Body.UserData as PhysicsObject;
-            PhysicsObject pb2 = contact.FixtureB.Body.UserData as PhysicsObject;
+            IPhysicsObject pb1 = contact.FixtureA.Body.UserData as IPhysicsObject;
+            IPhysicsObject pb2 = contact.FixtureB.Body.UserData as IPhysicsObject;
             if (pb1 != null || pb2 != null)
             {
                 float maxImpulse = 0;
@@ -34,9 +34,9 @@ namespace LiteEngine.Physics
                 for (int i = 0; i < count; ++i)
                     maxImpulse = System.Math.Max(maxImpulse, impulse.points[i].normalImpulse);
                 if (pb2 != null)
-                    pb2.Collision(maxImpulse);
+                    pb2.OnCollideWith(pb2, pb1, maxImpulse);
                 if (pb1 != null)
-                    pb1.Collision(maxImpulse);
+                    pb1.OnCollideWith(pb1, pb2, maxImpulse);
             }
         }
 
@@ -50,21 +50,18 @@ namespace LiteEngine.Physics
             _world.Step(step);    
         }
 
-        public PhysicsObject CreateBody()
+        public Body CreateBody(IPhysicsObject obj)
         {
-            return new PhysicsObject(BodyFactory.CreateBody(_world));
+            Body body = BodyFactory.CreateBody(_world);
+            body.UserData = obj;
+            return body;
         }
 
-        public PhysicsObject CreateRectangleBody(float width, float height, float density)
+        public Body CreateRectangleBody(IPhysicsObject obj, float width, float height, float density)
         {
-            return new PhysicsObject(BodyFactory.CreateRectangle(_world, width, height, density));
+            Body body = BodyFactory.CreateRectangle(_world, width, height, density);
+            body.UserData = obj;
+            return body;
         }
     }
-
-    /// <summary>
-    /// Delegate for collision handlers
-    /// </summary>
-    /// <param name="impulse">impulse of the collision, more = greater impact</param>
-    /// <returns>if true the collision handler is deregistered for the body</returns>
-    public delegate void CollisionCallbackHandler(float impulse);
 }
