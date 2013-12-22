@@ -54,7 +54,7 @@ namespace LiteEngine.Particles
         /// <param name="velocity">new velocity of the particle</param>
         /// <param name="color">color of the particle</param>
         /// <param name="life">lifetime of the particle, before it is removed from the world</param>
-        internal void Initialize(PhysicsCore physics, Vector2 position, Vector2 velocity, int life, bool collidesWithWorld)
+        internal void Initialize(PhysicsCore physics, Vector2 position, Vector2 velocity, int life)
         {
             if (_body == null)
             {
@@ -68,7 +68,7 @@ namespace LiteEngine.Particles
             //disable the body so that it doesn't collide before it has been initialized
             body.Enabled = false;
             body.BodyType = BodyType.Dynamic;
-            body.Mass = 0.01f;
+            body.Mass = 0.0001f;
             body.Friction = 1f;
             body.Restitution = 0.1f;
             body.Position = position;
@@ -76,16 +76,7 @@ namespace LiteEngine.Particles
             body.IgnoreGravity = true;
             body.FixedRotation = true;
             body.LinearDamping = 0.1f;
-            if (collidesWithWorld)
-            {
-                body.CollisionCategories = Category.Cat2;
-                body.CollidesWith = Category.Cat1;
-            }
-            else
-            {
-                body.CollisionCategories = Category.None;
-                body.CollidesWith = Category.None;
-            }
+            body.IsBullet = true;
             //enable the particle in the physics system
             body.Enabled = true;
             Life = life;

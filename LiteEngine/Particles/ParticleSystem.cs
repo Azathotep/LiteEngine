@@ -27,7 +27,7 @@ namespace LiteEngine.Particles
             return new ParticlePool(this);
         }
 
-        public Particle CreateParticle(Vector2 position, Vector2 velocity, int life, bool collidesWithWorld)
+        public Particle CreateParticle(Vector2 position, Vector2 velocity, int life)
         {
             Particle newParticle;
             if (_unusedParticles.Count == 0)
@@ -42,7 +42,7 @@ namespace LiteEngine.Particles
             else
                 newParticle = _unusedParticles.Dequeue();
             //setup the particle properties
-            newParticle.Initialize(_physics, position, velocity, life, collidesWithWorld);
+            newParticle.Initialize(_physics, position, velocity, life);
             _activeParticles.AddFirst(newParticle);
             return newParticle;
         }
