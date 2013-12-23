@@ -63,5 +63,10 @@ namespace LiteEngine.Physics
             body.UserData = obj;
             return body;
         }
+
+        public void RemoveBody(Body body)
+        {
+            _world.RemoveBody(body);
+        }
     }
 }
