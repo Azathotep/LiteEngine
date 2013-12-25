@@ -73,6 +73,12 @@ namespace LiteEngine.Rendering
             _deviceManager.ApplyChanges();
         }
 
+        public VertexBuffer CreateVertexBuffer(int vertexCount)
+        {
+            VertexBuffer ret = new VertexBuffer(_deviceManager.GraphicsDevice, VertexPositionColorTexture.VertexDeclaration, vertexCount, BufferUsage.WriteOnly);
+            return ret;
+        }
+
         public float ScreenWidth
         {
             get
@@ -224,6 +230,19 @@ namespace LiteEngine.Rendering
         public void BeginDrawToScreen()
         {
             _spriteBatch.Begin();
+        }
+
+        public void DrawUserPrimitives(VertexBuffer vertexBuffer, LiteEngine.Textures.Texture texture)
+        {
+            Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
+            effect.Techniques["Basic"].Passes[0].Apply();
+            effect.Parameters["xWorld"].SetValue(_camera.World);
+            effect.Parameters["xProjection"].SetValue(_camera.Projection);
+            effect.Parameters["xView"].SetValue(_camera.View);
+            Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
+            effect.Parameters["xTexture"].SetValue(xnaTexture);
+            _deviceManager.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            _deviceManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount / 3);
         }
     }
 }

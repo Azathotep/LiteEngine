@@ -2,13 +2,13 @@
 struct VsOut
 {
     float4 Position   	: SV_POSITION;
+    float4 Color	: COLOR;
     float2 TextureCoords: TEXCOORD0;
-	float4 Color		: COLOR;
 };
 
 struct PsOut
 {
-    float4 Color : COLOR0;
+    float4 Color : COLOR;
 };
 
 //------- Constants --------
@@ -33,7 +33,7 @@ sampler TextureSampler2 = sampler_state { texture = <xTexture2>; magfilter = LIN
 
 //------- Technique: Transparent --------
 
-VsOut BasicVS( float4 inPos : SV_POSITION, float2 inTexCoords: TEXCOORD0, float4 inColor: COLOR)
+VsOut BasicVS( float4 inPos : SV_POSITION, float4 inColor: COLOR, float2 inTexCoords: TEXCOORD0)
 {	
 	VsOut ret = (VsOut)0;
 	float4x4 viewProjection = mul (xView, xProjection);
