@@ -1,0 +1,8 @@
+Compiling .fx files to .mgfxo
+
+Use the 2MGFX.exe in Tools\bin\Windows
+
+
+2MGFX.exe my.fx my.mgfxo /DX11
+
+If DX11 is not specified it compiles it for opengl and demands shader SM 3.0 or lower
