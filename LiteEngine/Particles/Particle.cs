@@ -76,7 +76,6 @@ namespace LiteEngine.Particles
             body.IgnoreGravity = true;
             body.FixedRotation = true;
             body.LinearDamping = 0.1f;
-            body.IsBullet = true;
             body.CollidesWith = Category.None;
             body.CollisionCategories = Category.None;
             //enable the particle in the physics system

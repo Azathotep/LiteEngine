@@ -22,6 +22,14 @@ namespace LiteEngine.Physics
             _world.ContactManager.PostSolve += PostSolve;
         }
 
+        public World World
+        {
+            get
+            {
+                return _world;
+            }
+        }
+
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             Body body = contact.FixtureA.Body;
