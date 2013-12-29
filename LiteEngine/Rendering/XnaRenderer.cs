@@ -232,7 +232,7 @@ namespace LiteEngine.Rendering
             _spriteBatch.Begin();
         }
 
-        public void DrawUserPrimitives(VertexBuffer vertexBuffer, LiteEngine.Textures.Texture texture)
+        public void DrawUserPrimitives(VertexBuffer vertexBuffer, LiteEngine.Textures.Texture texture, int primitiveCount=-1)
         {
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
             effect.Techniques["Basic"].Passes[0].Apply();
@@ -242,7 +242,9 @@ namespace LiteEngine.Rendering
             Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
             effect.Parameters["xTexture"].SetValue(xnaTexture);
             _deviceManager.GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            _deviceManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount / 3);
+            if (primitiveCount == -1)
+                primitiveCount = vertexBuffer.VertexCount / 3;
+            _deviceManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitiveCount);
         }
     }
 }
