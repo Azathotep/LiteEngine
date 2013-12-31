@@ -145,27 +145,36 @@ namespace LiteEngine.Rendering
             DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), Color.White);
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
         {
             Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
             Rectangle sourceRect = xnaTexture.Bounds;
             if (texture.Bounds.HasValue)
                 sourceRect = new Rectangle(texture.Bounds.Value.X, texture.Bounds.Value.Y, texture.Bounds.Value.Width, texture.Bounds.Value.Height);
-            DrawSprite(xnaTexture, sourceRect, position, drawDepth, rotation, origin, color, flipHorizontal);
+            DrawSprite(xnaTexture, sourceRect, position, drawDepth, rotation, origin, color, flipHorizontal, wrapped);
         }
 
-        public void DrawSprite(Texture2D texture, Rectangle sourceRect, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false)
+        public void DrawSprite(Texture2D texture, Rectangle sourceRect, RectangleF destRect, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
         {
-            float scaleW = 1 / (float)sourceRect.Width * position.Width;
-            float scaleH = 1 / (float)sourceRect.Height * position.Height;
-
+            Vector2 scale = Vector2.One;
+            if (!wrapped)
+            {
+                float scaleW = 1 / (float)sourceRect.Width * destRect.Width;
+                float scaleH = 1 / (float)sourceRect.Height * destRect.Height;
+                scale = new Vector2(scaleW, scaleH);
+            }
+            else
+            {
+                //scale = new Vector2(0.1f, 0.1f);
+                sourceRect = new Rectangle(0, 0, 2000, 900);
+            }
             origin.X *= sourceRect.Width;
             origin.Y *= sourceRect.Height;
 
             SpriteEffects effects = SpriteEffects.None;
             if (flipHorizontal)
                 effects = SpriteEffects.FlipHorizontally;
-            _spriteBatch.Draw(texture, new Vector2(position.X, position.Y), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), new Vector2(scaleW, scaleH), effects, drawDepth);
+            _spriteBatch.Draw(texture, new Vector2(destRect.X, destRect.Y), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), scale, effects, drawDepth);
         }
 
         internal void Initialize()
@@ -173,12 +182,13 @@ namespace LiteEngine.Rendering
             _spriteBatch = new SpriteBatch(_deviceManager.GraphicsDevice);
         }
 
-        internal void Begin(Matrix world, Matrix projection, Matrix view)
+        public void Begin(Matrix world, Matrix projection, Matrix view)
         {
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
             effect.Parameters["xWorld"].SetValue(world);
             effect.Parameters["xProjection"].SetValue(projection);
             effect.Parameters["xView"].SetValue(view);   // blendstate was null before
+            //linearClamp LinearWrap
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
         }
 
