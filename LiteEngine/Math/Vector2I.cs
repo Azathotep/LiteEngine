@@ -10,5 +10,25 @@
             X = x;
             Y = y;
         }
+
+        public static bool operator ==(Vector2I a, Vector2I b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+
+        public static bool operator !=(Vector2I a, Vector2I b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
