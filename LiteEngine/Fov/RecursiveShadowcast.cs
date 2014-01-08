@@ -12,10 +12,9 @@ namespace LiteEngine.Fov
     /// </summary>
     public class RecursiveShadowcast
     {
+        IFovInfo _fovInfo;
         Vector2I _eye;
         int _viewRadius;
-        Func<Vector2I, bool> _blocksLightCallback;
-        Action<Vector2I> _visibleTileCallback;
 
         /// <summary>
         /// Runs the FOV algorithm calling the provided callbacks. The visibleTileCallback will be called for each tile
@@ -26,12 +25,11 @@ namespace LiteEngine.Fov
         /// <param name="blocksLightCallback">the algorithm will invoke this callback passing the position of a tile (x,y). It expects the return value
         /// to be true if the tile at that coordinate blocks light (is opaque) or false it if lets light pass through (transparent)</param>
         /// <param name="visibleTileCallback">the algorithm invokes this callback for each visible tile it calculates is in the view</param>
-        public void GetFov(Vector2I eye, int viewRadius, Func<Vector2I, bool> blocksLightCallback, Action<Vector2I> visibleTileCallback)
+        public void CalculateFov(Vector2I eye, int viewRadius, IFovInfo fovInfo)
         {
             _eye = eye;
             _viewRadius = viewRadius;
-            _blocksLightCallback = blocksLightCallback;
-            _visibleTileCallback = visibleTileCallback;
+            _fovInfo = fovInfo;
             OctScan(1, 1, 1, 0);
             OctScan(2, 1, -1, 0);
             OctScan(3, 1, -1, 0);
@@ -178,7 +176,8 @@ namespace LiteEngine.Fov
                 }
                 if (dx * dx + dy * dy <= _viewRadius * _viewRadius)
                 {
-                    _visibleTileCallback(new Vector2I(x, y));
+                    //notify that this tile is visible
+                    _fovInfo.OnTileVisible(x, y);
                 }
                 dx += gx;
                 dy += gy;
@@ -196,7 +195,7 @@ namespace LiteEngine.Fov
 
         bool TileBlocksLight(int x, int y)
         {
-            return _blocksLightCallback(new Vector2I(x,y));
+            return _fovInfo.TileBlocksLight(x, y);
         }
 
         private float GetSlope(float x, float y, float x2, float y2)
@@ -208,5 +207,23 @@ namespace LiteEngine.Fov
         {
             return (y2 - y) / (x2 - x);
         }
+    }
+
+    public interface IFovInfo
+    {
+        /// <summary>
+        /// Returns whether the tile at the specified coordinates blocks light
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>true if the tile blocks light, false if it doesn't</returns>
+        bool TileBlocksLight(int x, int y);
+
+        /// <summary>
+        /// Called to indicate the tile at the specified coordinates is visible
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        void OnTileVisible(int x, int y);
     }
 }
