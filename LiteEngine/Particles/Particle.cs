@@ -92,7 +92,7 @@ namespace LiteEngine.Particles
 
         public void Draw(XnaRenderer renderer, float particleSize, Color color, float alpha)
         {
-            renderer.DrawSprite(_particleTexture, new RectangleF(Position.X, Position.Y, particleSize, particleSize), 0, color, alpha);
+            renderer.DrawSprite(_particleTexture, Position, new Vector2(particleSize, particleSize), 0, color, alpha);
         }
 
         public void OnCollideWith(IPhysicsObject self, IPhysicsObject other, float impulse)

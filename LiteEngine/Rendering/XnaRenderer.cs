@@ -125,22 +125,22 @@ namespace LiteEngine.Rendering
             set;
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation, float alpha)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation, float alpha)
         {
-            DrawSprite(texture, center, DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White * alpha);
+            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White * alpha);
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation, Color color, float alpha)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation, Color color, float alpha)
         {
-            DrawSprite(texture, center, DrawDepth, rotation, new Vector2(0.5f, 0.5f), new Color(color * alpha, alpha));
+            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), new Color(color * alpha, alpha));
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF center, float rotation)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation)
         {
-            DrawSprite(texture, center, DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White);
+            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White);
         }
 
-        public void DrawExactSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
         {
             DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), Color.White);
         }
