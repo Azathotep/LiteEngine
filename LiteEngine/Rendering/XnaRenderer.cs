@@ -125,19 +125,25 @@ namespace LiteEngine.Rendering
             set;
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation, float alpha)
-        {
-            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White * alpha);
-        }
-
-        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation, Color color, float alpha)
-        {
-            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), new Color(color * alpha, alpha));
-        }
-
         public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation)
         {
             DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), Color.White);
+        }
+
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation, float alpha)
+        {
+            Color color = Color.White;
+            color.A = (byte)(alpha * 255);
+            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), color);
+        }
+
+        /// <summary>
+        /// Draw sprite centered on specific point. Setting alpha to 0 will cause additive blend.
+        /// </summary>
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Vector2 centerPosition, Vector2 size, float rotation, Color color, float alpha)
+        {
+            color.A = (byte)(alpha * 255);
+            DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), color);
         }
 
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
