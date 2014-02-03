@@ -16,7 +16,7 @@ namespace LiteEngine.Particles
     {
         Body _body;
         public int Life;
-        static Texture _particleTexture = new Texture("particle");
+        static Texture _particleTexture = new Texture("point");
 
         public Vector2 Position
         {
