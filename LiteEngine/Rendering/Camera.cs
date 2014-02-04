@@ -117,5 +117,35 @@ namespace LiteEngine.Rendering
                 return _aspect.Y * _zoom;
             }
         }
+
+        /// <summary>
+        /// Converts screen coordinates (range -1..1) to world coordinates
+        /// </summary>
+        public Vector2 ScreenToWorld(Vector2 screen)
+        {
+            Matrix wvp = World * View * Projection;
+            Matrix inv = Matrix.Invert(wvp);
+            return Vector2.Transform(screen, inv);
+        }
+
+        /// <summary>
+        /// Returns the side of a line that a point is on
+        /// </summary>
+        int LineSide(Vector2 a, Vector2 b, Vector2 point)
+        {
+            return System.Math.Sign((b.X - a.X) * (point.Y - a.Y) - (b.Y - a.Y) * (point.X - a.X));
+        }
+
+        /// <summary>
+        /// Returns whether a world point is on the screen
+        /// </summary>
+        public bool IsPointOnScreen(Vector2 worldPoint)
+        {
+            Matrix wvp = World * View * Projection;
+            Vector2 screenPoint = Vector2.Transform(worldPoint, wvp);
+            if (screenPoint.X > -1 && screenPoint.X < 1 && screenPoint.Y > -1 && screenPoint.Y < 1)
+                return true;
+            return false;
+        }
     }
 }
