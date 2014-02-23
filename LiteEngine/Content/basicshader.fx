@@ -26,10 +26,20 @@ float xLighting;
 
 //------- Texture Samplers --------
 
-Texture xTexture;
+Texture2D xTexture;
+
 Texture xTexture2;
-sampler TextureSampler = sampler_state { texture = <xTexture>; magfilter = LINEAR; minfilter = LINEAR; mipfilter=LINEAR; AddressU = mirror; AddressV = mirror;};
-sampler TextureSampler2 = sampler_state { texture = <xTexture2>; magfilter = LINEAR; minfilter = LINEAR; mipfilter=LINEAR; AddressU = mirror; AddressV = mirror;};
+
+SamplerState TextureSampler
+{ 
+  Texture = <xTexture>; 
+  Filter = MIN_MAG_MIP_LINEAR;
+  AddressU = mirror; AddressV = mirror;
+};
+
+//MIN_MAG_LINEAR_MIP_POINT;
+//MIN_MAG_MIP_POINT
+//MIN_MAG_MIN_LINEAR
 
 //------- Technique: Transparent --------
 

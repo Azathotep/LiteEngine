@@ -79,6 +79,14 @@ namespace LiteEngine.Rendering
             return ret;
         }
 
+        public GraphicsDevice GraphicsDevice
+        {
+            get
+            {
+                return _deviceManager.GraphicsDevice;
+            }
+        }
+
         public float ScreenWidth
         {
             get
@@ -183,6 +191,14 @@ namespace LiteEngine.Rendering
             _spriteBatch.Draw(texture, new Vector2(destRect.X, destRect.Y), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), scale, effects, drawDepth);
         }
 
+        public ContentManager ContentManager
+        {
+            get
+            {
+                return _contentManager;
+            }
+        }
+
         internal void Initialize()
         {
             _spriteBatch = new SpriteBatch(_deviceManager.GraphicsDevice);
@@ -246,21 +262,6 @@ namespace LiteEngine.Rendering
         public void BeginDrawToScreen()
         {
             _spriteBatch.Begin();
-        }
-
-        public void DrawUserPrimitives(VertexBuffer vertexBuffer, LiteEngine.Textures.Texture texture, int primitiveCount=-1)
-        {
-            Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
-            effect.Techniques["Basic"].Passes[0].Apply();
-            effect.Parameters["xWorld"].SetValue(_camera.World);
-            effect.Parameters["xProjection"].SetValue(_camera.Projection);
-            effect.Parameters["xView"].SetValue(_camera.View);
-            Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
-            effect.Parameters["xTexture"].SetValue(xnaTexture);
-            _deviceManager.GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            if (primitiveCount == -1)
-                primitiveCount = vertexBuffer.VertexCount / 3;
-            _deviceManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitiveCount);
         }
     }
 }
