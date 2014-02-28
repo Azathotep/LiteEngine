@@ -331,6 +331,15 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Restores collisions between this fixture and all other fixtures
+        /// </summary>
+        public void ClearCollisionIgnores()
+        {
+            _collisionIgnores.Clear();
+            Refilter();
+        }
+
+        /// <summary>
         /// Ignores collisions between this fixture and the provided fixture.
         /// </summary>
         /// <param name="fixture">The fixture.</param>

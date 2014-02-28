@@ -1275,6 +1275,14 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        public void ClearCollisionIgnores()
+        {
+            for (int i = 0; i < FixtureList.Count; i++)
+            {
+                FixtureList[i].ClearCollisionIgnores();
+            }
+        }
+
         public void IgnoreCollisionWith(Body other)
         {
             for (int i = 0; i < FixtureList.Count; i++)
