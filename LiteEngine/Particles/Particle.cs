@@ -90,9 +90,14 @@ namespace LiteEngine.Particles
             OnCollideWithOther = null;
         }
 
-        public void Draw(XnaRenderer renderer, float particleSize, Color color, float alpha)
+        public void Draw(XnaRenderer renderer, float particleSize, Color color, float alpha, float rotation=0)
         {
-            renderer.DrawSprite(_particleTexture, Position, new Vector2(particleSize, particleSize), 0, color, alpha);
+            Draw(renderer, new Vector2(particleSize, particleSize), color, alpha, rotation);
+        }
+
+        public void Draw(XnaRenderer renderer, Vector2 particleSize, Color color, float alpha, float rotation = 0)
+        {
+            renderer.DrawSprite(_particleTexture, Position, particleSize, rotation, color, alpha);
         }
 
         public void OnCollideWith(IPhysicsObject self, IPhysicsObject other, float impulse)
