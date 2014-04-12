@@ -154,6 +154,16 @@ namespace LiteEngine.Rendering
             DrawSprite(texture, new RectangleF(centerPosition.X, centerPosition.Y, size.X, size.Y), DrawDepth, rotation, new Vector2(0.5f, 0.5f), color);
         }
 
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position)
+        {
+            DrawSprite(texture, position, DrawDepth, 0, new Vector2(0f, 0f), Color.White);
+        }
+
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, Color color)
+        {
+            DrawSprite(texture, position, DrawDepth, 0, new Vector2(0f, 0f), color);
+        }
+
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
         {
             DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), Color.White);
@@ -188,7 +198,14 @@ namespace LiteEngine.Rendering
             SpriteEffects effects = SpriteEffects.None;
             if (flipHorizontal)
                 effects = SpriteEffects.FlipHorizontally;
-            _spriteBatch.Draw(texture, new Vector2(destRect.X, destRect.Y), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), scale, effects, drawDepth);
+            Vector2 position = DrawOffset + new Vector2(destRect.X, destRect.Y);
+            _spriteBatch.Draw(texture, position, sourceRect, color, rotation, new Vector2(origin.X, origin.Y), scale, effects, drawDepth);
+        }
+
+        public Vector2 DrawOffset
+        {
+            get;
+            set;
         }
 
         public ContentManager ContentManager
@@ -204,14 +221,15 @@ namespace LiteEngine.Rendering
             _spriteBatch = new SpriteBatch(_deviceManager.GraphicsDevice);
         }
 
-        public void Begin(Matrix world, Matrix projection, Matrix view)
+        public void Begin(Matrix world, Matrix projection, Matrix view, SpriteSortMode sortMode = SpriteSortMode.BackToFront)
         {
+            DrawOffset = Vector2.Zero;
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
             effect.Parameters["xWorld"].SetValue(world);
             effect.Parameters["xProjection"].SetValue(projection);
             effect.Parameters["xView"].SetValue(view);   // blendstate was null before
             //linearClamp LinearWrap
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
+            _spriteBatch.Begin(sortMode, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
         }
 
         internal void End()
@@ -255,13 +273,23 @@ namespace LiteEngine.Rendering
             //Vector2 worldPos = ScreenToWorld(bounds.X, bounds.Y);
             Vector2 worldPos = new Vector2(bounds.X, bounds.Y);
             float _worldScreenScale = 1f; // 0.04f;
-            _spriteBatch.DrawString(font, drawString, worldPos, color, 0, Vector2.Zero, _worldScreenScale, SpriteEffects.None, 0.1f);
+            worldPos += DrawOffset;
+            _spriteBatch.DrawString(font, drawString, worldPos, color, 0, Vector2.Zero, _worldScreenScale, SpriteEffects.None, DrawDepth);
             return bounds;
         }
 
         public void BeginDrawToScreen()
         {
+            DrawOffset = Vector2.Zero;
             _spriteBatch.Begin();
+        }
+
+        public Vector2 CenterScreen 
+        {
+            get
+            {
+                return new Vector2(ScreenWidth, ScreenHeight) * 0.5f;
+            }
         }
     }
 }

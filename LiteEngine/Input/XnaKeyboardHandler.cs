@@ -59,7 +59,7 @@ namespace LiteEngine.Input
 
         internal void UnpressKeys()
         {
-            foreach (Keys key in _keyTimeout.Keys)
+            foreach (Keys key in _keyTimeout.Keys.ToArray())
                 _keyTimeout[key] = -1;
         }
     }

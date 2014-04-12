@@ -130,7 +130,7 @@ namespace LiteEngine.Xna
         protected abstract void DrawFrame(GameTime gameTime);
         protected abstract void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyHandler);
 
-        protected XnaRenderer Renderer
+        public XnaRenderer Renderer
         {
             get
             {

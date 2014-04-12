@@ -24,6 +24,16 @@
             return p.X >= _x && p.X <= _x + _width && p.Y > _y && p.Y < _y + _height;
         }
 
+        /// <summary>
+        /// Returns a rectangle resized in all directions by a specified amount
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public RectangleF Grow(float amount)
+        {
+            return new RectangleF(X - amount, Y - amount, Width + amount * 2, Height + amount * 2);
+        }
+
         public float X
         {
             get

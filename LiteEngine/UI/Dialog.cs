@@ -4,37 +4,26 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 using LiteEngine.Rendering;
+using Microsoft.Xna.Framework;
+using LiteEngine.Textures;
+using LiteEngine.Math;
 
 namespace LiteEngine.UI
 {
-    public abstract class Dialog
+    public abstract class Dialog : BaseUIControl
     {
-        public abstract void Render(XnaRenderer renderer);
-
-        public bool IsVisible;
-
-        public virtual int ProcessKey(Keys key)
+        public Dialog()
         {
-            return -1;
+            
         }
-
-        internal UIManager UI
-        {
-            get;
-            set;
-        }
+        
+        public event EventHandler OnClose;
 
         public void Close()
         {
-            UI.HideDialog(this);
-        }
-
-        public virtual bool KeyboardFocus
-        {
-            get
-            {
-                return true;
-            }
+            if (OnClose != null)
+                OnClose(this, new EventArgs());
         }
     }
 }
+

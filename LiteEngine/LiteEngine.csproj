@@ -79,7 +79,9 @@
     <Compile Include="Textures\SpriteSheet.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureBook.cs" />
+    <Compile Include="UI\BaseUIControl.cs" />
     <Compile Include="UI\Dialog.cs" />
+    <Compile Include="UI\ImageControl.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="Xna\XnaEngine.cs" />
   </ItemGroup>
