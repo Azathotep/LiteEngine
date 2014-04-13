@@ -11,6 +11,11 @@ namespace LiteEngine.UI
 {
     public class ImageControl : BaseUIControl
     {
+        public ImageControl()
+        {
+
+        }
+
         public ImageControl(Texture image)
         {
             Image = image;
@@ -24,12 +29,15 @@ namespace LiteEngine.UI
 
         public override void Draw(XnaRenderer renderer)
         {
-            renderer.DrawSprite(Image, Bounds, 0);
+            if (Image != null)
+                renderer.DrawSprite(Image, Bounds, 0);
         }
     }
 
     public class TextControl : BaseUIControl
     {
+        bool _needsReformatting = false;
+        string _formattedText="";
         string _text = "";
         public string Text
         {
@@ -40,8 +48,11 @@ namespace LiteEngine.UI
             set
             {
                 _text = value;
+                _needsReformatting = true;
             }
         }
+
+
 
         public Texture Background
         {
@@ -51,9 +62,12 @@ namespace LiteEngine.UI
 
         public override void Draw(XnaRenderer renderer)
         {
+            if (_needsReformatting)
+                _formattedText = renderer.GenerateFormattedString(_text, Bounds);
+
             if (Background != null)
                 renderer.DrawSprite(Background, Bounds, 0);
-            renderer.DrawStringBox(_text, Bounds, Color.White);
+            renderer.DrawString(_formattedText, Position, Color.White);
         }
     }
 }

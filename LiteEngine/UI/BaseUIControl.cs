@@ -12,6 +12,9 @@ namespace LiteEngine.UI
 {
     public abstract class BaseUIControl
     {
+        static Texture _borderTexture = new Texture("shipparts", new RectangleI(0, 0, 32, 32));
+        public float BorderWidth = 0;
+
         public BaseUIControl Parent = null;
         List<BaseUIControl> _children = new List<BaseUIControl>();
         public IEnumerable<BaseUIControl> Children
@@ -50,7 +53,15 @@ namespace LiteEngine.UI
             child.Position = position;
         }
 
-        public abstract void Draw(XnaRenderer renderer);
+        public virtual void Draw(XnaRenderer renderer)
+        {
+        }
+
+        public void DrawBorder(XnaRenderer renderer)
+        {
+            if (BorderWidth > 0.01f)
+                renderer.DrawSprite(_borderTexture, Bounds.Grow(BorderWidth));
+        }
 
         protected Vector2 ScreenPosition
         {
@@ -107,7 +118,7 @@ namespace LiteEngine.UI
         /// <param name="key">pressed key</param>
         /// <returns>delay before the key press is fired again if the key is held down. 
         /// To prevent the key press being fired again until the key is released return -1 </returns>
-        public virtual int ProcessKey(Keys key)
+        public virtual int ProcessKey(UIManager manager, Keys key)
         {
             return -1;
         }

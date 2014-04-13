@@ -19,11 +19,18 @@ namespace LiteEngine.UI
 
         List<Dialog> _shownDialogs = new List<Dialog>();
 
+        /// <summary>
+        /// Display dialog centered on the screen
+        /// </summary>
         public void ShowDialog(Dialog dialog)
         {
+            ShowDialog(dialog, new Vector2(_engine.Renderer.ScreenWidth, _engine.Renderer.ScreenHeight) * 0.5f - dialog.Size * 0.5f);
+        }
+
+        public void ShowDialog(Dialog dialog, Vector2 position)
+        {
+            dialog.Position = position;
             dialog.OnClose += dialog_OnClose;
-            //center the dialog at the center of the screen
-            dialog.Position = new Vector2(_engine.Renderer.ScreenWidth, _engine.Renderer.ScreenHeight) * 0.5f - dialog.Size * 0.5f;
             _shownDialogs.Add(dialog);
             _engine.KeyboardHandler.UnpressKeys();
         }
@@ -54,6 +61,8 @@ namespace LiteEngine.UI
 
         internal void DrawControl(BaseUIControl control, XnaRenderer renderer)
         {
+            if (control.BorderWidth > 0.01f)
+                control.DrawBorder(renderer);
             control.Draw(renderer);
             Vector2 drawOffset = renderer.DrawOffset + control.Position;
             foreach (BaseUIControl child in control.Children)
@@ -72,7 +81,7 @@ namespace LiteEngine.UI
             {
                 if (dialog.KeyboardFocus)
                 {
-                    repressDelay = dialog.ProcessKey(key);
+                    repressDelay = dialog.ProcessKey(this, key);
                     return true;
                 }
             }

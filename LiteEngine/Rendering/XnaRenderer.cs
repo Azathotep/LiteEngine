@@ -243,6 +243,48 @@ namespace LiteEngine.Rendering
             return font.MeasureString(text);
         }
 
+        public void DrawString(string text, Vector2 position, Color color)
+        {
+            SpriteFont font = _contentManager.Load<SpriteFont>("Font");
+            position += DrawOffset;
+            _spriteBatch.DrawString(font, text, position, color, 0, Vector2.Zero, 1f, SpriteEffects.None, DrawDepth);
+        }
+
+        /// <summary>
+        /// Formats a string so that it will fit within the specified bounds when drawn 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="bounds"></param>
+        /// <param name="rightAlign"></param>
+        /// <returns>formatted string</returns>
+        public string GenerateFormattedString(string text, RectangleF bounds, bool rightAlign = false)
+        {
+            SpriteFont font = _contentManager.Load<SpriteFont>("Font");
+            //todo bounds.Height ignored
+            string[] words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string drawString = "";
+            string lineSoFar = "";
+            string linePlusWord = "";
+            foreach (string word in words)
+            {
+                if (lineSoFar.Length > 0)
+                    linePlusWord += " ";
+                linePlusWord += word;
+                Vector2 newSize = font.MeasureString(linePlusWord);
+                if (newSize.X >= bounds.Width)
+                {
+                    drawString += lineSoFar + Environment.NewLine;
+                    lineSoFar = word;
+                    linePlusWord = lineSoFar;
+                }
+                else
+                    lineSoFar = linePlusWord;
+            }
+            if (lineSoFar.Length > 0)
+                drawString += lineSoFar;
+            return drawString;
+        }
+
         public RectangleF DrawStringBox(string text, RectangleF bounds, Color color, bool rightAlign = false)
         {
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");

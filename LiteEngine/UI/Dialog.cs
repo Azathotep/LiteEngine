@@ -12,9 +12,11 @@ namespace LiteEngine.UI
 {
     public abstract class Dialog : BaseUIControl
     {
+        Texture _background;
         public Dialog()
         {
-            
+            _background = new Texture("dialog");
+            BackgroundColor = Color.White;
         }
         
         public event EventHandler OnClose;
@@ -23,6 +25,16 @@ namespace LiteEngine.UI
         {
             if (OnClose != null)
                 OnClose(this, new EventArgs());
+        }
+        
+        public override void Draw(XnaRenderer renderer)
+        {
+            renderer.DrawSprite(_background, Bounds, BackgroundColor);
+        }
+        public Color BackgroundColor
+        {
+            get;
+            set;
         }
     }
 }
