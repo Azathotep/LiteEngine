@@ -52,13 +52,13 @@ namespace LiteEngine.UI
             }
         }
 
-
-
         public Texture Background
         {
             get;
             set;
         }
+
+        public Color TextColor = Color.White;
 
         public override void Draw(XnaRenderer renderer)
         {
@@ -67,7 +67,7 @@ namespace LiteEngine.UI
 
             if (Background != null)
                 renderer.DrawSprite(Background, Bounds, 0);
-            renderer.DrawString(_formattedText, Position, Color.White);
+            renderer.DrawString(_formattedText, Position, TextColor);
         }
     }
 }

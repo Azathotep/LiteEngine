@@ -30,19 +30,11 @@ namespace LiteEngine.UI
         public void ShowDialog(Dialog dialog, Vector2 position)
         {
             dialog.Position = position;
-            dialog.OnClose += dialog_OnClose;
             _shownDialogs.Add(dialog);
             _engine.KeyboardHandler.UnpressKeys();
         }
 
-        void dialog_OnClose(object sender, EventArgs e)
-        {
-            Dialog dialog = sender as Dialog;
-            if (dialog == null)
-                return;
-            dialog.OnClose -= dialog_OnClose;
-            _shownDialogs.Remove(dialog);
-        }
+        List<Dialog> _closeList = new List<Dialog>();
 
         internal void RenderUI(XnaRenderer renderer)
         {
@@ -53,10 +45,16 @@ namespace LiteEngine.UI
             renderer.Begin(world, projection, view, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
             foreach (Dialog dialog in _shownDialogs)
             {
+                if (dialog.IsClosing)
+                    _closeList.Add(dialog);
                 renderer.DrawOffset = Vector2.Zero;
                 DrawControl(dialog, renderer);
             }
             renderer.End();
+
+            foreach (Dialog dialog in _closeList)
+                _shownDialogs.Remove(dialog);
+            _closeList.Clear();
         }
 
         internal void DrawControl(BaseUIControl control, XnaRenderer renderer)
