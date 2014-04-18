@@ -47,8 +47,11 @@ namespace LiteEngine.UI
             }
             set
             {
-                _text = value;
-                _needsReformatting = true;
+                if (_text != value)
+                {
+                    _text = value;
+                    _needsReformatting = true;
+                }
             }
         }
 

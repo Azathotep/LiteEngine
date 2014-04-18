@@ -129,6 +129,15 @@ namespace LiteEngine.Rendering
         }
 
         /// <summary>
+        /// Converts world coordinates to screen coordinates (range -1..1)
+        /// </summary>
+        public Vector2 WorldToScreen(Vector2 world)
+        {
+            Matrix wvp = World * View * Projection;
+            return Vector2.Transform(world, wvp);
+        }
+
+        /// <summary>
         /// Returns the side of a line that a point is on
         /// </summary>
         int LineSide(Vector2 a, Vector2 b, Vector2 point)
