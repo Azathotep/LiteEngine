@@ -82,6 +82,8 @@
     <Compile Include="UI\BaseUIControl.cs" />
     <Compile Include="UI\Dialog.cs" />
     <Compile Include="UI\ImageControl.cs" />
+    <Compile Include="UI\StackPanel.cs" />
+    <Compile Include="UI\TextBox.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="Xna\XnaEngine.cs" />
   </ItemGroup>

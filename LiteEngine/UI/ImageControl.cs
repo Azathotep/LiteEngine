@@ -33,44 +33,4 @@ namespace LiteEngine.UI
                 renderer.DrawSprite(Image, Bounds, 0);
         }
     }
-
-    public class TextControl : BaseUIControl
-    {
-        bool _needsReformatting = false;
-        string _formattedText="";
-        string _text = "";
-        public string Text
-        {
-            get
-            {
-                return _text;
-            }
-            set
-            {
-                if (_text != value)
-                {
-                    _text = value;
-                    _needsReformatting = true;
-                }
-            }
-        }
-
-        public Texture Background
-        {
-            get;
-            set;
-        }
-
-        public Color TextColor = Color.White;
-
-        public override void Draw(XnaRenderer renderer)
-        {
-            if (_needsReformatting)
-                _formattedText = renderer.GenerateFormattedString(_text, Bounds);
-
-            if (Background != null)
-                renderer.DrawSprite(Background, Bounds, 0);
-            renderer.DrawString(_formattedText, Position, TextColor);
-        }
-    }
 }

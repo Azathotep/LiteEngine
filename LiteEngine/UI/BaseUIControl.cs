@@ -31,7 +31,29 @@ namespace LiteEngine.UI
         /// Position relative to parent
         /// </summary>
         public Vector2 Position;
-        public Vector2 Size;
+
+        public event EventHandler OnSizeChanged;
+
+        Vector2 _size;
+        public Vector2 Size
+        {
+            get
+            {
+                return _size;
+            }
+            set
+            {
+                _size = value;
+                if (OnSizeChanged != null)
+                    OnSizeChanged(this, null);
+            }
+        }
+
+        public virtual void AddChild(BaseUIControl child)
+        {
+            child.Parent = this;
+            _children.Add(child);
+        }
 
         /// <summary>
         /// Adds a new child control to this control
@@ -40,17 +62,15 @@ namespace LiteEngine.UI
         /// <param name="position">bounds of the child control relative to this control</param>
         public void AddChild(BaseUIControl child, RectangleF bounds)
         {
-            child.Parent = this;
-            _children.Add(child);
             child.Position = new Vector2(bounds.Left, bounds.Top);
             child.Size = new Vector2(bounds.Width, bounds.Height);
+            AddChild(child);
         }
 
         public void AddChild(BaseUIControl child, Vector2 position)
         {
-            child.Parent = this;
-            _children.Add(child);
             child.Position = position;
+            AddChild(child);
         }
 
         public virtual void Draw(XnaRenderer renderer)

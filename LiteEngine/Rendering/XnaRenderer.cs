@@ -257,7 +257,7 @@ namespace LiteEngine.Rendering
         /// <param name="bounds"></param>
         /// <param name="rightAlign"></param>
         /// <returns>formatted string</returns>
-        public string GenerateFormattedString(string text, RectangleF bounds, bool rightAlign = false)
+        public string GenerateFormattedString(string text, RectangleF bounds, out Vector2 formattedSize, bool rightAlign = false)
         {
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");
             //todo bounds.Height ignored
@@ -265,6 +265,7 @@ namespace LiteEngine.Rendering
             string drawString = "";
             string lineSoFar = "";
             string linePlusWord = "";
+            formattedSize = new Vector2(0, 0);
             foreach (string word in words)
             {
                 if (lineSoFar.Length > 0)
@@ -281,7 +282,10 @@ namespace LiteEngine.Rendering
                     lineSoFar = linePlusWord;
             }
             if (lineSoFar.Length > 0)
+            {
                 drawString += lineSoFar;
+                formattedSize = font.MeasureString(drawString);
+            }
             return drawString;
         }
 
@@ -323,6 +327,9 @@ namespace LiteEngine.Rendering
         public void BeginDrawToScreen()
         {
             DrawOffset = Vector2.Zero;
+
+            //Matrix scale = Matrix.CreateScale(0.5f); //Matrix.Identity; // 
+            //_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, scale);
             _spriteBatch.Begin();
         }
 
