@@ -79,7 +79,8 @@ namespace LiteEngine.UI
             {
                 if (dialog.KeyboardFocus)
                 {
-                    repressDelay = dialog.ProcessKey(this, key);
+                    KeyPressResult res = dialog.ProcessKey(this, key);
+                    repressDelay = res.ReprocessDelay;
                     return true;
                 }
             }

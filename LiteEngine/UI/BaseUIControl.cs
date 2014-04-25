@@ -136,11 +136,38 @@ namespace LiteEngine.UI
         /// Override this method to handle key presses in the dialog when it has key focus
         /// </summary>
         /// <param name="key">pressed key</param>
-        /// <returns>delay before the key press is fired again if the key is held down. 
-        /// To prevent the key press being fired again until the key is released return -1 </returns>
-        public virtual int ProcessKey(UIManager manager, Keys key)
+        /// <returns>Structure indicating whether the key press was handled and if so what the delay should
+        /// be before the key can be reprocessed</returns>
+        public virtual KeyPressResult ProcessKey(UIManager manager, Keys key)
         {
-            return -1;
+            return KeyPressResult.NotHandled;
         }
+    }
+
+    /// <summary>
+    /// Return structure returned from ProcessKey which contains both whether the key press was handled
+    /// and if it was handled what the delay should be until the same key can be processed again.
+    /// There can be no delay, or a latched setting where the key must be depressed and pressed again before
+    /// the key can be processed again.
+    /// </summary>
+    public struct KeyPressResult
+    {
+        public bool Handled;
+        public short ReprocessDelay;
+        public KeyPressResult(short refireDelay)
+        {
+            Handled = true;
+            ReprocessDelay = refireDelay;
+        }
+
+        public KeyPressResult(bool handled)
+        {
+            Handled = handled;
+            ReprocessDelay = -1;
+        }
+
+        public static KeyPressResult HandledNoDelay = new KeyPressResult(0);
+        public static KeyPressResult HandledLatched = new KeyPressResult(-1);
+        public static KeyPressResult NotHandled = new KeyPressResult(false);
     }
 }
