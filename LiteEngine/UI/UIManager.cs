@@ -30,6 +30,7 @@ namespace LiteEngine.UI
         public void ShowDialog(Dialog dialog, Vector2 position)
         {
             dialog.Position = position;
+            dialog.Initialize();
             _shownDialogs.Add(dialog);
             _engine.KeyboardHandler.UnpressKeys();
         }

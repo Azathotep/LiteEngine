@@ -30,6 +30,11 @@ namespace LiteEngine.UI
             }
         }
 
+        internal void Initialize()
+        {
+            _isClosing = false;
+        }
+
         public virtual void Close()
         {
             _isClosing = true;
