@@ -9,12 +9,14 @@ namespace LiteEngine.Rendering
 {
     public class Camera
     {
+        XnaRenderer _renderer;
         Matrix _world = Matrix.Identity;
         Matrix _projection;
         Matrix _view;
 
-        public Camera()
+        public Camera(XnaRenderer renderer)
         {
+            _renderer = renderer;
             SetAspect(20, 15);
         }
 
@@ -129,12 +131,16 @@ namespace LiteEngine.Rendering
         }
 
         /// <summary>
-        /// Converts world coordinates to screen coordinates (range -1..1)
+        /// Converts world coordinates to screen coordinates (range screenWidth..ScreenHeight)
         /// </summary>
         public Vector2 WorldToScreen(Vector2 world)
         {
             Matrix wvp = World * View * Projection;
-            return Vector2.Transform(world, wvp);
+            Vector2 ret = Vector2.Transform(world, wvp);
+            //ret is in range (-1..1)
+            ret.X = (ret.X + 1) * 0.5f * _renderer.ScreenWidth;
+            ret.Y = (2 - (ret.Y + 1)) * 0.5f * _renderer.ScreenHeight;
+            return ret;
         }
 
         /// <summary>

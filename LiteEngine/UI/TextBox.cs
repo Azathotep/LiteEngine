@@ -1,4 +1,5 @@
-﻿using LiteEngine.Rendering;
+﻿using LiteEngine.Math;
+using LiteEngine.Rendering;
 using LiteEngine.Textures;
 using Microsoft.Xna.Framework;
 using System;
@@ -37,14 +38,22 @@ namespace LiteEngine.UI
 
         public Color TextColor = Color.White;
 
+        public bool AutoSize = false;
+
         public override void Draw(XnaRenderer renderer)
         {
             if (_needsReformatting)
             {
                 Vector2 formattedSize;
-                _formattedText = renderer.GenerateFormattedString(_text, Bounds, out formattedSize);
-                //keep the width fixed but allow the height to grow or shrink
-                formattedSize.X = Size.X;
+                float maxWidth = Bounds.Width;
+                if (AutoSize)
+                    maxWidth = 10000;
+                _formattedText = renderer.GenerateFormattedString(_text, maxWidth, out formattedSize);
+                if (!AutoSize)
+                {
+                    //keep the width fixed but allow the height to grow or shrink
+                    formattedSize.X = Size.X;
+                }
                 Size = formattedSize;
             }
             if (Background != null)

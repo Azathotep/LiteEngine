@@ -25,7 +25,8 @@ namespace LiteEngine.Rendering
             _deviceManager = deviceManager;
             _contentManager = contentManager;
             _window = window;
-            DrawDepth = 1;            
+            DrawDepth = 1;    
+            _camera = new Camera(this);
         }
 
         public RenderTarget2D CreateRenderTarget(int width, int height)
@@ -103,7 +104,7 @@ namespace LiteEngine.Rendering
             }
         }
 
-        Camera _camera = new Camera();
+        Camera _camera;
         public Camera Camera
         {
             get
@@ -167,6 +168,11 @@ namespace LiteEngine.Rendering
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float rotation)
         {
             DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), Color.White);
+        }
+
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, Color color, float rotation)
+        {
+            DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), color);
         }
 
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
@@ -257,7 +263,7 @@ namespace LiteEngine.Rendering
         /// <param name="bounds"></param>
         /// <param name="rightAlign"></param>
         /// <returns>formatted string</returns>
-        public string GenerateFormattedString(string text, RectangleF bounds, out Vector2 formattedSize, bool rightAlign = false)
+        public string GenerateFormattedString(string text, float maxWidth, out Vector2 formattedSize, bool rightAlign = false)
         {
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");
             //todo bounds.Height ignored
@@ -272,7 +278,7 @@ namespace LiteEngine.Rendering
                     linePlusWord += " ";
                 linePlusWord += word;
                 Vector2 newSize = font.MeasureString(linePlusWord);
-                if (newSize.X >= bounds.Width)
+                if (newSize.X >= maxWidth)
                 {
                     drawString += lineSoFar + Environment.NewLine;
                     lineSoFar = word;
