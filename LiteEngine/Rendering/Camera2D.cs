@@ -111,5 +111,28 @@ namespace LiteEngine.Rendering
             Vector3 up = new Vector3(Util.AngleToVector(angle), 0);
             _view = Matrix.CreateLookAt(new Vector3(position, -1), new Vector3(position, 0), up);
         }
+
+        /// <summary>
+        /// Converts world coordinates to view coordinates (range -1..+1)
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        public Vector2 WorldToView(Vector2 world)
+        {
+            Matrix wvp = World * View * Projection;
+            Vector2 ret = Vector2.Transform(world, wvp);
+            //ret is in range (-1..1)
+            return ret;
+        }
+
+        /// <summary>
+        /// Converts screen coordinates (range -1..1) to world coordinates
+        /// </summary>
+        public Vector2 ViewToWorld(Vector2 screen)
+        {
+            Matrix wvp = World * View * Projection;
+            Matrix inv = Matrix.Invert(wvp);
+            return Vector2.Transform(screen, inv);
+        }
     }
 }

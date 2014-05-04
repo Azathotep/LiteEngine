@@ -88,8 +88,11 @@ namespace LiteEngine.Xna
         protected sealed override void Initialize()
         {
             _renderer.Initialize();
-            Initialize(_renderer);
+            //todo - need to know the screen size to initialize the uimanager, but the user doesn't specify it until
+            //the Initialize() method, and that needs the UIManager to be created already in case they want to add controls
             _ui = new UIManager(this);
+            Initialize(_renderer);
+            _ui.Initialize();
             base.Initialize();
         }
 

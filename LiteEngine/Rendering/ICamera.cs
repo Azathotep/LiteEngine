@@ -22,5 +22,11 @@ namespace LiteEngine.Rendering
         {
             get;
         }
+
+        Vector2 WorldToView(Vector2 world);
+
+        float Zoom { get; set; }
+
+        Vector2 ViewToWorld(Vector2 targetScreenPos);
     }
 }

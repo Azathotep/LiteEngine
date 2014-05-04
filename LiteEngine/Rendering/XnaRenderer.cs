@@ -191,8 +191,18 @@ namespace LiteEngine.Rendering
             _spriteBatch = new SpriteBatch(_deviceManager.GraphicsDevice);
         }
 
+        ICamera _activeCamera;
+        public ICamera ActiveCamera
+        {
+            get
+            {
+                return _activeCamera;
+            }
+        }
+
         public void BeginDraw(ICamera camera, SpriteSortMode sortMode = SpriteSortMode.BackToFront)
         {
+            _activeCamera = camera;
             DrawOffset = Vector2.Zero;
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
             effect.Parameters["xWorld"].SetValue(camera.World);
@@ -300,15 +310,6 @@ namespace LiteEngine.Rendering
             worldPos += DrawOffset;
             _spriteBatch.DrawString(font, drawString, worldPos, color, 0, Vector2.Zero, _worldScreenScale, SpriteEffects.None, DrawDepth);
             return bounds;
-        }
-
-        public void BeginDrawToScreen()
-        {
-            DrawOffset = Vector2.Zero;
-
-            //Matrix scale = Matrix.CreateScale(0.5f); //Matrix.Identity; // 
-            //_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, scale);
-            _spriteBatch.Begin();
         }
     }
 }

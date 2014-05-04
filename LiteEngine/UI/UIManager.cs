@@ -16,6 +16,10 @@ namespace LiteEngine.UI
         public UIManager(LiteXnaEngine engine)
         {
             _engine = engine;
+        }
+
+        public void Initialize()
+        {
             _camera = new Camera2D(new Vector2(_engine.ScreenSize.X / 2, _engine.ScreenSize.Y / 2), new Vector2(_engine.ScreenSize.X, _engine.ScreenSize.Y));
         }
 
@@ -90,6 +94,14 @@ namespace LiteEngine.UI
         {
             _shownDialogs.Remove(dialog);
             _engine.KeyboardHandler.UnpressKeys();
+        }
+
+        public ICamera Camera 
+        {
+            get
+            {
+                return _camera;
+            }
         }
     }
 }
