@@ -25,8 +25,7 @@ namespace LiteEngine.Rendering
             _deviceManager = deviceManager;
             _contentManager = contentManager;
             _window = window;
-            DrawDepth = 1;    
-            _camera = new Camera(this);
+            DrawDepth = 1;
         }
 
         public RenderTarget2D CreateRenderTarget(int width, int height)
@@ -46,7 +45,7 @@ namespace LiteEngine.Rendering
             _deviceManager.GraphicsDevice.SetRenderTarget(target);
         }
 
-        public void SetDeviceMode(int width, int height, bool fullscreen)
+        public void SetScreenSize(int width, int height, bool fullscreen)
         {
             //fullscreen in windows is not implemented in monogame
             //_deviceManager.IsFullScreen = fullscreen
@@ -88,44 +87,9 @@ namespace LiteEngine.Rendering
             }
         }
 
-        public float ScreenWidth
-        {
-            get
-            {
-                return _deviceManager.PreferredBackBufferWidth;
-            }
-        }
-
-        public float ScreenHeight
-        {
-            get
-            {
-                return _deviceManager.PreferredBackBufferHeight;
-            }
-        }
-
-        Camera _camera;
-        public Camera Camera
-        {
-            get
-            {
-                return _camera;
-            }
-        }
-
         public void Clear(Color color)
         {
             _deviceManager.GraphicsDevice.Clear(ClearOptions.DepthBuffer | ClearOptions.Target, color, 1, 0);
-        }
-
-        public void BeginDraw()
-        {
-            Begin(_camera.World, _camera.Projection, _camera.View);
-        }
-
-        public void EndDraw()
-        {
-            End();
         }
 
         public float DrawDepth
@@ -227,18 +191,18 @@ namespace LiteEngine.Rendering
             _spriteBatch = new SpriteBatch(_deviceManager.GraphicsDevice);
         }
 
-        public void Begin(Matrix world, Matrix projection, Matrix view, SpriteSortMode sortMode = SpriteSortMode.BackToFront)
+        public void BeginDraw(ICamera camera, SpriteSortMode sortMode = SpriteSortMode.BackToFront)
         {
             DrawOffset = Vector2.Zero;
             Effect effect = _contentManager.Load<Effect>("basicshader.mgfxo");
-            effect.Parameters["xWorld"].SetValue(world);
-            effect.Parameters["xProjection"].SetValue(projection);
-            effect.Parameters["xView"].SetValue(view);   // blendstate was null before
+            effect.Parameters["xWorld"].SetValue(camera.World);
+            effect.Parameters["xProjection"].SetValue(camera.Projection);
+            effect.Parameters["xView"].SetValue(camera.View);   // blendstate was null before
             //linearClamp LinearWrap
             _spriteBatch.Begin(sortMode, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
         }
 
-        internal void End()
+        public void EndDraw()
         {
             _spriteBatch.End();
         }
@@ -254,6 +218,14 @@ namespace LiteEngine.Rendering
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");
             position += DrawOffset;
             _spriteBatch.DrawString(font, text, position, color, 0, Vector2.Zero, 1f, SpriteEffects.None, DrawDepth);
+        }
+
+        static LiteEngine.Textures.Texture _pointTexture = new LiteEngine.Textures.Texture("point");
+
+
+        public void DrawPoint(Vector2 position, float size, Color color, float alpha)
+        {
+            DrawSprite(_pointTexture, position, new Vector2(size, size), 0f, color, alpha);
         }
 
         /// <summary>
@@ -337,14 +309,6 @@ namespace LiteEngine.Rendering
             //Matrix scale = Matrix.CreateScale(0.5f); //Matrix.Identity; // 
             //_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, scale);
             _spriteBatch.Begin();
-        }
-
-        public Vector2 CenterScreen 
-        {
-            get
-            {
-                return new Vector2(ScreenWidth, ScreenHeight) * 0.5f;
-            }
         }
     }
 }

@@ -11,10 +11,12 @@ namespace LiteEngine.UI
 {
     public class UIManager
     {
+        Camera2D _camera;
         LiteXnaEngine _engine;
         public UIManager(LiteXnaEngine engine)
         {
             _engine = engine;
+            _camera = new Camera2D(new Vector2(_engine.ScreenSize.X / 2, _engine.ScreenSize.Y / 2), new Vector2(_engine.ScreenSize.X, _engine.ScreenSize.Y));
         }
 
         List<Dialog> _shownDialogs = new List<Dialog>();
@@ -24,7 +26,7 @@ namespace LiteEngine.UI
         /// </summary>
         public void ShowDialog(Dialog dialog)
         {
-            ShowDialog(dialog, new Vector2(_engine.Renderer.ScreenWidth, _engine.Renderer.ScreenHeight) * 0.5f - dialog.Size * 0.5f);
+            ShowDialog(dialog, _engine.ScreenSize * 0.5f - dialog.Size * 0.5f);
         }
 
         public void ShowDialog(Dialog dialog, Vector2 position)
@@ -39,11 +41,7 @@ namespace LiteEngine.UI
 
         internal void RenderUI(XnaRenderer renderer)
         {
-            Matrix world = Matrix.Identity;
-            Matrix projection = Matrix.CreateOrthographic(renderer.ScreenWidth, renderer.ScreenHeight, -1000.5f, 500); //800, 600, -1000.5f, 500);
-            Matrix view = Matrix.CreateLookAt(new Vector3(renderer.ScreenWidth / 2, renderer.ScreenHeight/2, -1), new Vector3(renderer.ScreenWidth / 2, renderer.ScreenHeight / 2, 0), new Vector3(0, -1, 0));
-            
-            renderer.Begin(world, projection, view, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
+            renderer.BeginDraw(_camera, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
             foreach (Dialog dialog in _shownDialogs)
             {
                 if (dialog.IsClosing)
@@ -51,7 +49,7 @@ namespace LiteEngine.UI
                 renderer.DrawOffset = Vector2.Zero;
                 DrawControl(dialog, renderer);
             }
-            renderer.End();
+            renderer.EndDraw();
 
             foreach (Dialog dialog in _closeList)
                 _shownDialogs.Remove(dialog);

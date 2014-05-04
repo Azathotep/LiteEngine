@@ -75,6 +75,8 @@
     <Compile Include="Procedural\NoiseField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Rendering\Camera2D.cs" />
+    <Compile Include="Rendering\ICamera.cs" />
     <Compile Include="Rendering\XnaRenderer.cs" />
     <Compile Include="Textures\SpriteSheet.cs" />
     <Compile Include="Textures\Texture.cs" />

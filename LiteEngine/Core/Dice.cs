@@ -24,13 +24,27 @@ namespace LiteEngine.Core
         }
 
         /// <summary>
-        /// Returns a random vector with components randomly in the range +-plusMinus
+        /// Returns a float in the range +-plusMinus
         /// </summary>
-        /// <param name="plusMinus"></param>
-        /// <returns></returns>
-        public static Vector2 RandomVector(float plusMinus)
+        public static float RandomFloat(float plusMinus)
         {
-            return new Vector2(Next() * plusMinus * 2 - plusMinus, Next() * plusMinus * 2 - plusMinus);
+            return Next() * plusMinus * 2 - plusMinus;
+        }
+
+        /// <summary>
+        /// Returns a Vector2 with random components in the range +-plusMinus
+        /// </summary>
+        public static Vector2 RandomVector2(float plusMinus)
+        {
+            return new Vector2(RandomFloat(plusMinus), RandomFloat(plusMinus));
+        }
+
+        /// <summary>
+        /// Returns a Vector3 with random components in the range +-plusMinus
+        /// </summary>
+        public static Vector3 RandomVector3(float plusMinus)
+        {
+            return new Vector3(RandomFloat(plusMinus), RandomFloat(plusMinus), RandomFloat(plusMinus));
         }
     }
 }

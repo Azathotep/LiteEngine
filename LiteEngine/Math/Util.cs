@@ -31,5 +31,12 @@ namespace LiteEngine.Math
             Vector2 v = destination - start;
             return (float)System.Math.Atan2(v.X, -v.Y);
         }
+
+        public static Vector2 AngleToVector(float angle)
+        {
+            if (angle == 0)
+                return new Vector2(0, -1);
+            return new Vector2((float)System.Math.Sin(angle), -(float)System.Math.Cos(angle));
+        }
     }
 }

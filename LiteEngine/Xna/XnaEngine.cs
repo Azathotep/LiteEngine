@@ -30,7 +30,22 @@ namespace LiteEngine.Xna
             _renderer = new XnaRenderer(_graphics, Content, Window);
             _keyboardHandler = new XnaKeyboardHandler();
             _keyboardHandler.OnKeyPressed += _keyboardHandler_OnKeyPressed;
-            _ui = new UIManager(this);
+        }
+
+        public Vector2 ScreenSize
+        {
+            get
+            {
+                return new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            }
+        }
+
+        public Vector2 CenterScreen
+        {
+            get
+            {
+                return ScreenSize * 0.5f;
+            }
         }
 
         int _keyboardHandler_OnKeyPressed(Keys key, GameTime gameTime)
@@ -60,23 +75,32 @@ namespace LiteEngine.Xna
             }
         }
 
-        protected virtual int OnKeyPress(Keys key, GameTime gameTime)
+        protected abstract int OnKeyPress(Keys key, GameTime gameTime);
+
+        public XnaRenderer Renderer
         {
-            return 0;
+            get
+            {
+                return _renderer;
+            }
         }
 
-        protected override void Initialize()
+        protected sealed override void Initialize()
         {
             _renderer.Initialize();
+            Initialize(_renderer);
+            _ui = new UIManager(this);
             base.Initialize();
         }
+
+        protected abstract void Initialize(XnaRenderer renderer);
 
         protected sealed override void Update(GameTime gameTime)
         {
             _keyboardHandler.Update(gameTime);
             _physics.Update(System.Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
             _particleSystem.Update();
-            UpdateFrame(gameTime, _keyboardHandler);
+            UpdateFrame(gameTime);
             base.Update(gameTime);
         }
 
@@ -122,21 +146,28 @@ namespace LiteEngine.Xna
                 _numFrames = 0;
             }
 
-            DrawFrame(gameTime);
+            if (_autoClear)
+                _renderer.Clear(Color.Black);
+            DrawFrame(gameTime, _renderer);
             _ui.RenderUI(_renderer);
             base.Draw(gameTime);
         }
 
-        protected abstract void DrawFrame(GameTime gameTime);
-        protected abstract void UpdateFrame(GameTime gameTime, XnaKeyboardHandler keyHandler);
-
-        public XnaRenderer Renderer
+        bool _autoClear = true;
+        public bool AutoClear
         {
             get
             {
-                return _renderer;
+                return _autoClear;
+            }
+            set
+            {
+                _autoClear = value;
             }
         }
+
+        protected abstract void DrawFrame(GameTime gameTime, XnaRenderer renderer);
+        protected abstract void UpdateFrame(GameTime gameTime);
 
         public XnaKeyboardHandler KeyboardHandler
         {
