@@ -12,7 +12,7 @@ namespace LiteEngine.UI
 {
     public abstract class BaseUIControl
     {
-        static Texture _borderTexture = new Texture("shipparts", new RectangleI(0, 0, 32, 32));
+        static Texture _borderTexture = new Texture("border");
         public float BorderWidth = 0;
 
         public BaseUIControl Parent = null;
@@ -25,7 +25,7 @@ namespace LiteEngine.UI
             }
         }
 
-        public bool Visible;
+        public bool Visible = true;
 
         /// <summary>
         /// Position relative to parent

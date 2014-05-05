@@ -223,15 +223,15 @@ namespace LiteEngine.Rendering
             return font.MeasureString(text);
         }
 
-        public void DrawString(string text, Vector2 position, Color color)
+        public void DrawString(string text, Vector2 position, Color color, float scale=1)
         {
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");
             position += DrawOffset;
-            _spriteBatch.DrawString(font, text, position, color, 0, Vector2.Zero, 1f, SpriteEffects.None, DrawDepth);
+            _spriteBatch.DrawString(font, text, position, color, 0, Vector2.Zero, scale, SpriteEffects.None, DrawDepth);
         }
 
         static LiteEngine.Textures.Texture _pointTexture = new LiteEngine.Textures.Texture("point");
-
+        static LiteEngine.Textures.Texture _solidTexture = new LiteEngine.Textures.Texture("solid");
 
         public void DrawPoint(Vector2 position, float size, Color color, float alpha)
         {
@@ -245,7 +245,7 @@ namespace LiteEngine.Rendering
         /// <param name="bounds"></param>
         /// <param name="rightAlign"></param>
         /// <returns>formatted string</returns>
-        public string GenerateFormattedString(string text, float maxWidth, out Vector2 formattedSize, bool rightAlign = false)
+        public string GenerateFormattedString(string text, float textScale, float maxWidth, out Vector2 formattedSize, bool rightAlign = false)
         {
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");
             //todo bounds.Height ignored
@@ -259,7 +259,7 @@ namespace LiteEngine.Rendering
                 if (lineSoFar.Length > 0)
                     linePlusWord += " ";
                 linePlusWord += word;
-                Vector2 newSize = font.MeasureString(linePlusWord);
+                Vector2 newSize = font.MeasureString(linePlusWord) * textScale;
                 if (newSize.X >= maxWidth)
                 {
                     drawString += lineSoFar + Environment.NewLine;
@@ -272,7 +272,7 @@ namespace LiteEngine.Rendering
             if (lineSoFar.Length > 0)
             {
                 drawString += lineSoFar;
-                formattedSize = font.MeasureString(drawString);
+                formattedSize = font.MeasureString(drawString) * textScale;
             }
             return drawString;
         }
@@ -310,6 +310,13 @@ namespace LiteEngine.Rendering
             worldPos += DrawOffset;
             _spriteBatch.DrawString(font, drawString, worldPos, color, 0, Vector2.Zero, _worldScreenScale, SpriteEffects.None, DrawDepth);
             return bounds;
+        }
+
+        public void DrawLine(Vector2 start, Vector2 end, Color color, float thickness)
+        {
+            float length = (start - end).Length();
+            float angle = Util.AngleBetween(start, end);
+            DrawSprite(_solidTexture, (start + end) * 0.5f, new Vector2(thickness, length), angle, color, 1f);
         }
     }
 }

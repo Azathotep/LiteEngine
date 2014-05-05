@@ -24,6 +24,7 @@ namespace LiteEngine.UI
         }
 
         List<Dialog> _shownDialogs = new List<Dialog>();
+        List<BaseUIControl> _controls = new List<BaseUIControl>();
 
         /// <summary>
         /// Display dialog centered on the screen
@@ -31,6 +32,11 @@ namespace LiteEngine.UI
         public void ShowDialog(Dialog dialog)
         {
             ShowDialog(dialog, _engine.ScreenSize * 0.5f - dialog.Size * 0.5f);
+        }
+
+        public void AddControl(BaseUIControl control)
+        {
+            _controls.Add(control);
         }
 
         public void ShowDialog(Dialog dialog, Vector2 position)
@@ -46,6 +52,14 @@ namespace LiteEngine.UI
         internal void RenderUI(XnaRenderer renderer)
         {
             renderer.BeginDraw(_camera, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
+
+            foreach (BaseUIControl control in _controls)
+            {
+                renderer.DrawOffset = Vector2.Zero;
+                DrawControl(control, renderer);
+            }
+            renderer.EndDraw();
+
             foreach (Dialog dialog in _shownDialogs)
             {
                 if (dialog.IsClosing)
@@ -62,6 +76,8 @@ namespace LiteEngine.UI
 
         internal void DrawControl(BaseUIControl control, XnaRenderer renderer)
         {
+            if (!control.Visible)
+                return;
             if (control.BorderWidth > 0.01f)
                 control.DrawBorder(renderer);
             control.Draw(renderer);

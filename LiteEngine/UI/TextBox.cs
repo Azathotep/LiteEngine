@@ -36,6 +36,23 @@ namespace LiteEngine.UI
             set;
         }
 
+        float _textScale=1f;
+        public float TextScale
+        {
+            get
+            {
+                return _textScale;
+            }
+            set
+            {
+                if (_textScale != value)
+                {
+                    _textScale = value;
+                    _needsReformatting = true;
+                }
+            }
+        }
+
         public Color TextColor = Color.White;
 
         public bool AutoSize = false;
@@ -48,7 +65,7 @@ namespace LiteEngine.UI
                 float maxWidth = Bounds.Width;
                 if (AutoSize)
                     maxWidth = 10000;
-                _formattedText = renderer.GenerateFormattedString(_text, maxWidth, out formattedSize);
+                _formattedText = renderer.GenerateFormattedString(_text, _textScale, maxWidth, out formattedSize);
                 if (!AutoSize)
                 {
                     //keep the width fixed but allow the height to grow or shrink
@@ -58,7 +75,7 @@ namespace LiteEngine.UI
             }
             if (Background != null)
                 renderer.DrawSprite(Background, Bounds, 0);
-            renderer.DrawString(_formattedText, Position, TextColor);
+            renderer.DrawString(_formattedText, Position, TextColor, _textScale);
         }
     }
 }
