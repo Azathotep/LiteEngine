@@ -17,6 +17,7 @@ namespace LiteEngine.Xna
         PhysicsCore _physics;
         XnaRenderer _renderer;
         XnaKeyboardHandler _keyboardHandler;
+        MouseHandler _mouseHandler;
         GraphicsDeviceManager _graphics;
         UIManager _ui;
         ParticleSystem _particleSystem;
@@ -30,6 +31,8 @@ namespace LiteEngine.Xna
             _renderer = new XnaRenderer(_graphics, Content, Window);
             _keyboardHandler = new XnaKeyboardHandler();
             _keyboardHandler.OnKeyPressed += _keyboardHandler_OnKeyPressed;
+            _mouseHandler = new MouseHandler();
+            _mouseHandler.OnMouseClick += _mouseHandler_OnMouseClick;
         }
 
         public Vector2 ScreenSize
@@ -56,6 +59,17 @@ namespace LiteEngine.Xna
             return OnKeyPress(key, gameTime);
         }
 
+        int _mouseHandler_OnMouseClick(MouseButton button, Point mousePosition)
+        {
+            float x = (float)mousePosition.X / ScreenSize.X;
+            float y = (float)mousePosition.Y / ScreenSize.Y;
+            Vector2 position = new Vector2(x * 2 - 1, (1 - y) * 2 - 1);
+            //if (_ui.ProcessKey(key, out repressDelay))
+            //    return repressDelay;
+            OnMouseClick(button, position);
+            return 0;
+        }
+
         /// <summary>
         /// Returns an interface to the physics engine
         /// </summary>
@@ -76,6 +90,15 @@ namespace LiteEngine.Xna
         }
 
         protected abstract int OnKeyPress(Keys key, GameTime gameTime);
+        /// <summary>
+        /// Called when the mouse is clicked
+        /// </summary>
+        /// <param name="button">button that was clicked</param>
+        /// <param name="mousePosition">position of the mouse on the screen in the range (x,y) = (-1..1, -1..1)</param>
+        protected virtual void OnMouseClick(MouseButton button, Vector2 mousePosition)
+        {
+
+        }
 
         public XnaRenderer Renderer
         {
@@ -101,6 +124,7 @@ namespace LiteEngine.Xna
         protected sealed override void Update(GameTime gameTime)
         {
             _keyboardHandler.Update(gameTime);
+            _mouseHandler.Update();
             _physics.Update(System.Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
             _particleSystem.Update();
             UpdateFrame(gameTime);
@@ -186,6 +210,16 @@ namespace LiteEngine.Xna
             {
                 return _ui;
             }
+        }
+
+        /// <summary>
+        /// Returns the position of the mouse on the screen in the range (x,y) = (-1..1, -1..1)
+        /// </summary>
+        public Vector2 GetMousePosition()
+        {
+            float x = (float)Mouse.GetState().Position.X / ScreenSize.X;
+            float y = (float)Mouse.GetState().Position.Y / ScreenSize.Y;
+            return new Vector2(x * 2 - 1, (1 - y) * 2 - 1);
         }
     }
 }

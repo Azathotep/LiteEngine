@@ -38,5 +38,21 @@ namespace LiteEngine.Math
                 return new Vector2(0, -1);
             return new Vector2((float)System.Math.Sin(angle), -(float)System.Math.Cos(angle));
         }
+
+        /// <summary>
+        /// Projects vector1 onto vector2
+        /// </summary>
+        /// <param name="force"></param>
+        /// <param name="momentArm"></param>
+        /// <returns></returns>
+        public static Vector2 Project(Vector2 vector1, Vector2 vector2)
+        {
+            return (Vector2.Dot(vector1, vector2) / Vector2.Dot(vector2, vector2)) * vector2;
+        }
+
+        public static Vector2 RotateVector(Vector2 vector, float angle)
+        {
+            return Vector2.Transform(vector, Matrix.CreateRotationZ(angle));
+        }
     }
 }

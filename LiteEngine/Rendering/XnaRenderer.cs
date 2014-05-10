@@ -169,7 +169,21 @@ namespace LiteEngine.Rendering
             if (flipHorizontal)
                 effects = SpriteEffects.FlipHorizontally;
             Vector2 position = DrawOffset + new Vector2(destRect.X, destRect.Y);
+            position = Vector2.Transform(position, Transformation);
             _spriteBatch.Draw(texture, position, sourceRect, color, rotation, new Vector2(origin.X, origin.Y), scale, effects, drawDepth);
+        }
+
+        Matrix _transformation = Matrix.Identity;
+        public Matrix Transformation
+        {
+            get
+            {
+                return _transformation;
+            }
+            set
+            {
+                _transformation = value;
+            }
         }
 
         public Vector2 DrawOffset
@@ -312,11 +326,26 @@ namespace LiteEngine.Rendering
             return bounds;
         }
 
-        public void DrawLine(Vector2 start, Vector2 end, Color color, float thickness)
+        public void DrawLine(Vector2 start, Vector2 end, float thickness, Color color, float alpha=1f)
         {
             float length = (start - end).Length();
-            float angle = Util.AngleBetween(start, end);
+            float angle = Util.AngleBetween(Vector2.Transform(start, Transformation), Vector2.Transform(end, Transformation));
             DrawSprite(_solidTexture, (start + end) * 0.5f, new Vector2(thickness, length), angle, color, 1f);
+        }
+
+        public void DrawArrow(Vector2 start, Vector2 end, float thickness, Color color, float alpha = 1f)
+        {
+            DrawLine(start, end, thickness, color, alpha);
+            float length = (start - end).Length();
+            float angle = Util.AngleBetween(start, end);
+            float tipAngle1 = angle + (float)System.Math.PI / 4;
+            float tipAngle2 = angle - (float)System.Math.PI / 4;
+
+            Vector2 v = Util.AngleToVector(tipAngle1) * 0.707f;
+            DrawLine(end, end - v, thickness, color, alpha);
+
+            v = Util.AngleToVector(tipAngle2) * 0.707f;
+            DrawLine(end, end - v, thickness, color, alpha);
         }
     }
 }

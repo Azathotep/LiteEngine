@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Core\Dice.cs" />
     <Compile Include="Fov\RecursiveShadowcast.cs" />
+    <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Input\XnaKeyboardHandler.cs" />
     <Compile Include="Math\RectangleF.cs" />
     <Compile Include="Math\RectangleI.cs" />
