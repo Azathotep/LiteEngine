@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Dice.cs" />
+    <Compile Include="Core\GridHelper.cs" />
     <Compile Include="Fov\RecursiveShadowcast.cs" />
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Input\XnaKeyboardHandler.cs" />
