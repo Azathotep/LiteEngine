@@ -1,4 +1,5 @@
-﻿namespace LiteEngine.Math
+﻿using Microsoft.Xna.Framework;
+namespace LiteEngine.Math
 {
     public struct Vector2I
     {
@@ -19,6 +20,11 @@
         public static bool operator !=(Vector2I a, Vector2I b)
         {
             return !(a == b);
+        }
+
+        public static Vector2I operator +(Vector2I a, Vector2 b)
+        {
+            return new Vector2I(a.X + (int)b.X, a.Y + (int)b.Y);
         }
 
         public override bool Equals(object obj)
