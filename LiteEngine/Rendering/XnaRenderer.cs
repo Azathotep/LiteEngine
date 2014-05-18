@@ -139,6 +139,12 @@ namespace LiteEngine.Rendering
             DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), color);
         }
 
+        public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, Color color, float alpha=1f, float rotation=0f)
+        {
+            color.A = (byte)(alpha * 255);
+            DrawSprite(texture, position, DrawDepth, rotation, new Vector2(0f, 0f), color);
+        }
+
         public void DrawSprite(LiteEngine.Textures.Texture texture, RectangleF position, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
         {
             Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
@@ -250,6 +256,11 @@ namespace LiteEngine.Rendering
         public void DrawPoint(Vector2 position, float size, Color color, float alpha)
         {
             DrawSprite(_pointTexture, position, new Vector2(size, size), 0f, color, alpha);
+        }
+
+        public void DrawFilledRectangle(RectangleF rectangle, Color color, float alpha=1f, float rotation=0f)
+        {
+            DrawSprite(_solidTexture, rectangle, color, alpha, rotation);
         }
 
         /// <summary>
