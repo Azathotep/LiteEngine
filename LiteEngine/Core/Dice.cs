@@ -46,5 +46,15 @@ namespace LiteEngine.Core
         {
             return new Vector3(RandomFloat(plusMinus), RandomFloat(plusMinus), RandomFloat(plusMinus));
         }
+
+        public static T RandomElement<T>(T[] array)
+        {
+            return array[Dice.Next(array.Length)];
+        }
+
+        public static T RandomElement<T>(IList<T> list)
+        {
+            return list[Dice.Next(list.Count)];
+        }
     }
 }
