@@ -9,6 +9,7 @@ using LiteEngine.Input;
 using LiteEngine.UI;
 using LiteEngine.Physics;
 using LiteEngine.Particles;
+using Microsoft.Xna.Framework.Audio;
 
 namespace LiteEngine.Xna
 {
@@ -220,6 +221,12 @@ namespace LiteEngine.Xna
             float x = (float)Mouse.GetState().Position.X / ScreenSize.X;
             float y = (float)Mouse.GetState().Position.Y / ScreenSize.Y;
             return new Vector2(x * 2 - 1, (1 - y) * 2 - 1);
+        }
+
+        public SoundEffect GetSoundEffect(string soundName)
+        {
+            SoundEffect sound = Content.Load<SoundEffect>(soundName);
+            return sound;
         }
     }
 }
