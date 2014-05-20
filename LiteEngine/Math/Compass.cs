@@ -24,6 +24,22 @@ namespace LiteEngine.Math
             }
         }
 
+        public static float GetAngle(CardinalDirection direction)
+        {
+            switch (direction)
+            {
+                case CardinalDirection.North:
+                    return 0f;
+                case CardinalDirection.East:
+                    return MathHelper.PiOver2;
+                case CardinalDirection.South:
+                    return MathHelper.Pi;
+                case CardinalDirection.West:
+                default:
+                    return MathHelper.Pi + MathHelper.PiOver2;
+            }
+        }
+
         public static CardinalDirection GetOppositeDirection(CardinalDirection direction)
         {
             switch (direction)

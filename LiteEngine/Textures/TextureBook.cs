@@ -9,7 +9,7 @@ namespace LiteEngine.Textures
     /// <summary>
     /// Stores textures for the game. Textures used in the game should be registered through this class.
     /// </summary>
-    class TextureBook
+    public class TextureBook
     {
         Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
 
@@ -24,7 +24,7 @@ namespace LiteEngine.Textures
         public void AddSpriteSheetTextures(string spriteSheetName, string spriteSheetXmlPath="")
         {
             if (spriteSheetXmlPath == "")
-                spriteSheetXmlPath = @"Content\SpriteSheets\" + spriteSheetName + ".xml";
+                spriteSheetXmlPath = @"Content\" + spriteSheetName + ".xml";
             SpriteSheet sh = new SpriteSheet();
             sh.Load(spriteSheetXmlPath);
             foreach (SpriteSheetTexture texture in sh.Images)

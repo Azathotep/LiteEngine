@@ -10,6 +10,7 @@ using LiteEngine.UI;
 using LiteEngine.Physics;
 using LiteEngine.Particles;
 using Microsoft.Xna.Framework.Audio;
+using LiteEngine.Textures;
 
 namespace LiteEngine.Xna
 {
@@ -22,7 +23,8 @@ namespace LiteEngine.Xna
         GraphicsDeviceManager _graphics;
         UIManager _ui;
         ParticleSystem _particleSystem;
-        
+        TextureBook _textureBook = new TextureBook();
+
         public LiteXnaEngine()
         {
             _physics = new PhysicsCore();
@@ -34,6 +36,14 @@ namespace LiteEngine.Xna
             _keyboardHandler.OnKeyPressed += _keyboardHandler_OnKeyPressed;
             _mouseHandler = new MouseHandler();
             _mouseHandler.OnMouseClick += _mouseHandler_OnMouseClick;
+        }
+
+        public TextureBook TextureBook
+        {
+            get
+            {
+                return _textureBook;
+            }
         }
 
         public Vector2 ScreenSize
