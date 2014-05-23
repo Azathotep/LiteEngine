@@ -40,6 +40,20 @@ namespace LiteEngine.Math
             }
         }
 
+        /// <summary>
+        /// Returns the direction a vector points. Assumes one of the components is zero.
+        /// </summary>
+        public static CardinalDirection GetDirection(Vector2I vector)
+        {
+            if (vector.X < 0)
+                return CardinalDirection.West;
+            if (vector.X > 0)
+                return CardinalDirection.East;
+            if (vector.Y < 0)
+                return CardinalDirection.North;
+            return CardinalDirection.South;
+        }
+
         public static CardinalDirection GetOppositeDirection(CardinalDirection direction)
         {
             switch (direction)

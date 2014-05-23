@@ -27,6 +27,11 @@ namespace LiteEngine.Math
             return new Vector2I(a.X + (int)b.X, a.Y + (int)b.Y);
         }
 
+        public static Vector2I operator -(Vector2I a, Vector2I b)
+        {
+            return new Vector2I(a.X - b.X, a.Y - b.Y);
+        }
+
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
