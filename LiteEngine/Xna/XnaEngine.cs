@@ -76,8 +76,9 @@ namespace LiteEngine.Xna
             float x = (float)mousePosition.X / ScreenSize.Width;
             float y = (float)mousePosition.Y / ScreenSize.Height;
             Vector2 position = new Vector2(x * 2 - 1, (1 - y) * 2 - 1);
-            //if (_ui.ProcessKey(key, out repressDelay))
-            //    return repressDelay;
+
+            bool handled = _ui.ProcessMouseClick(button, position);
+
             OnMouseClick(button, position);
             return 0;
         }

@@ -1,4 +1,5 @@
-﻿using LiteEngine.Math;
+﻿using LiteEngine.Input;
+using LiteEngine.Math;
 using LiteEngine.Rendering;
 using LiteEngine.Textures;
 using Microsoft.Xna.Framework;
@@ -70,19 +71,19 @@ namespace LiteEngine.UI
             switch (_dock)
             {
                 case DockPosition.Center:
-                    Position = Parent.Center - Size * 0.5f;
+                    Position = Parent.Size * 0.5f - Size * 0.5f;
                     break;
                 case DockPosition.Top:
-                    Position = new Vector2(Parent.Center.X - Size.Width * 0.5f, 0);
+                    Position = new Vector2(Parent.Size.Width * 0.5f - Size.Width * 0.5f, 0);
                     break;
                 case DockPosition.Bottom:
-                    Position = new Vector2(Parent.Center.X - Size.Width * 0.5f, Parent.Size.Height - Size.Height);
+                    Position = new Vector2(Parent.Size.Width * 0.5f - Size.Width * 0.5f, Parent.Size.Height - Size.Height);
                     break;
                 case DockPosition.Right:
-                    Position = new Vector2(Parent.Size.Width - Size.Width, Parent.Center.Y - Size.Height * 0.5f);
+                    Position = new Vector2(Parent.Size.Width - Size.Width, Parent.Size.Height * 0.5f - Size.Height * 0.5f);
                     break;
                 case DockPosition.Left:
-                    Position = new Vector2(0, Parent.Center.Y - Size.Height * 0.5f);
+                    Position = new Vector2(0, Parent.Size.Height * 0.5f - Size.Height * 0.5f);
                     break;
                 case DockPosition.TopLeft:
                     Position = new Vector2(0, 0);
@@ -97,6 +98,35 @@ namespace LiteEngine.UI
                     Position = new Vector2(0, Parent.Size.Height - Size.Height);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Called when a mouse click event occurs within this control
+        /// </summary>
+        /// <param name="position">position of the mouse click relative to this control</param>
+        /// <returns>true if this control or a subcontrol handled the mouse click</returns>
+        internal bool OnMouseClickInternal(MouseButton button, Vector2 position)
+        {
+            foreach (var control in Children)
+            {
+                Vector2 relPos = position - control.Position;
+                if (relPos.X < 0 || relPos.X >= control.Size.Width)
+                    continue;
+                if (relPos.Y < 0 || relPos.Y >= control.Size.Height)
+                    continue;
+                if (control.OnMouseClickInternal(button, relPos))
+                    return true;
+            }
+            return OnMouseClick(button, position);
+        }
+
+        /// <summary>
+        /// Called when the mouse is clicked on this control. Override to provide handling.
+        /// </summary>
+        /// <returns>true if the event is handled by this control</returns>
+        protected virtual bool OnMouseClick(MouseButton button, Vector2 position)
+        {
+            return false;
         }
 
         public virtual void AddChild(BaseUIControl child)
@@ -134,12 +164,13 @@ namespace LiteEngine.UI
                 DrawBorder(renderer);
             Draw(renderer);
 
-            Vector2 drawOffset = renderer.DrawOffset + Position;
+            Vector2 drawOffset = renderer.DrawOffset;
             foreach (BaseUIControl child in Children)
             {
-                renderer.DrawOffset = drawOffset;
+                renderer.DrawOffset = drawOffset + Position;
                 child.DrawInternal(renderer);
             }
+            renderer.DrawOffset = drawOffset;
         }
 
         private void DrawBackground(XnaRenderer renderer)
@@ -173,6 +204,11 @@ namespace LiteEngine.UI
             get
             {
                 return new RectangleF(Position.X, Position.Y, Size.Width, Size.Height);
+            }
+            set
+            {
+                Position = value.TopLeft;
+                Size = new SizeF(value.Width, value.Height);
             }
         }
 
@@ -217,7 +253,7 @@ namespace LiteEngine.UI
             return KeyPressResult.NotHandled;
         }
 
-        DockPosition _dock;
+        DockPosition _dock = DockPosition.None;
         public DockPosition Dock
         {
             get

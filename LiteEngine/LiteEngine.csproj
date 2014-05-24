@@ -89,6 +89,7 @@
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureBook.cs" />
     <Compile Include="UI\BaseUIControl.cs" />
+    <Compile Include="UI\Button.cs" />
     <Compile Include="UI\Dialog.cs" />
     <Compile Include="UI\ImageControl.cs" />
     <Compile Include="UI\StackPanel.cs" />

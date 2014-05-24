@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using LiteEngine.Xna;
 using LiteEngine.Rendering;
 using LiteEngine.Math;
+using LiteEngine.Input;
 
 namespace LiteEngine.UI
 {
@@ -105,6 +106,20 @@ namespace LiteEngine.UI
                 renderer.DrawOffset = drawOffset;
                 DrawControl(child, renderer);
             }
+        }
+
+        /// <summary>
+        /// Processes a mouse click occurs by sending it to the correct control in the control tree
+        /// </summary>
+        /// <param name="button">button clicked</param>
+        /// <param name="viewPosition">mouse click position in view coordinates (-1..1)</param>
+        /// <returns>true if the mouse click was handled by a control in the UI</returns>
+        internal bool ProcessMouseClick(MouseButton button, Vector2 viewPosition)
+        {
+            //get the mouse position in UI coordinates
+            Vector2 mousePos = _camera.ViewToWorld(viewPosition);
+            bool handled = OnMouseClickInternal(button, mousePos);
+            return handled;
         }
 
         internal bool ProcessKey(Keys key, out int repressDelay)

@@ -64,7 +64,12 @@ namespace LiteEngine.UI
                 SizeF formattedSize;
                 float maxWidth = Bounds.Width;
                 if (AutoSize)
-                    maxWidth = 10000;
+                {
+                    if (Parent != null)
+                        maxWidth = Parent.Size.Width;
+                    else
+                        maxWidth = 10000;
+                }
                 _formattedText = renderer.GenerateFormattedString(_text, _textScale, maxWidth, out formattedSize);
                 if (!AutoSize)
                 {
