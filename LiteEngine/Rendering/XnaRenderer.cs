@@ -45,7 +45,7 @@ namespace LiteEngine.Rendering
             _deviceManager.GraphicsDevice.SetRenderTarget(target);
         }
 
-        public void SetScreenSize(int width, int height, bool fullscreen)
+        public void SetResolution(int width, int height, bool fullscreen)
         {
             //fullscreen in windows is not implemented in monogame
             //_deviceManager.IsFullScreen = fullscreen
@@ -270,7 +270,7 @@ namespace LiteEngine.Rendering
         /// <param name="bounds"></param>
         /// <param name="rightAlign"></param>
         /// <returns>formatted string</returns>
-        public string GenerateFormattedString(string text, float textScale, float maxWidth, out Vector2 formattedSize, bool rightAlign = false)
+        public string GenerateFormattedString(string text, float textScale, float maxWidth, out SizeF formattedSize, bool rightAlign = false)
         {
             SpriteFont font = _contentManager.Load<SpriteFont>("Font");
             //todo bounds.Height ignored
@@ -278,7 +278,7 @@ namespace LiteEngine.Rendering
             string drawString = "";
             string lineSoFar = "";
             string linePlusWord = "";
-            formattedSize = new Vector2(0, 0);
+            formattedSize = new SizeF(0, 0);
             foreach (string word in words)
             {
                 if (lineSoFar.Length > 0)
@@ -297,7 +297,7 @@ namespace LiteEngine.Rendering
             if (lineSoFar.Length > 0)
             {
                 drawString += lineSoFar;
-                formattedSize = font.MeasureString(drawString) * textScale;
+                formattedSize = new SizeF(font.MeasureString(drawString) * textScale);
             }
             return drawString;
         }

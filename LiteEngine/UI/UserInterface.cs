@@ -6,10 +6,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using LiteEngine.Xna;
 using LiteEngine.Rendering;
+using LiteEngine.Math;
 
 namespace LiteEngine.UI
 {
-    public class UserInterface
+    public class UserInterface : BaseUIControl
     {
         Camera2D _camera;
         LiteXnaEngine _engine;
@@ -21,7 +22,8 @@ namespace LiteEngine.UI
 
         public void SetResolution(int width, int height)
         {
-            _camera = new Camera2D(new Vector2(0, 0), new Vector2(width, height));
+            Size = new SizeF(width, height);
+            _camera = new Camera2D(Size * 0.5f, Size);
         }
 
         List<Dialog> _shownDialogs = new List<Dialog>();
@@ -32,13 +34,15 @@ namespace LiteEngine.UI
         /// </summary>
         public void ShowDialog(Dialog dialog)
         {
+            Vector2 v = _engine.ScreenSize * 0.5f - dialog.Size * 0.5f;
             ShowDialog(dialog, _engine.ScreenSize * 0.5f - dialog.Size * 0.5f);
         }
 
-        public void AddControl(BaseUIControl control)
-        {
-            _controls.Add(control);
-        }
+        //public void AddControl(BaseUIControl control)
+        //{
+        //    AddChild(control);
+        //   // _controls.Add(control);
+        //}
 
         public void ShowDialog(Dialog dialog, Vector2 position)
         {
@@ -54,11 +58,12 @@ namespace LiteEngine.UI
         {
             renderer.BeginDraw(_camera, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
 
-            foreach (BaseUIControl control in _controls)
-            {
-                renderer.DrawOffset = Vector2.Zero;
-                DrawControl(control, renderer);
-            }
+            DrawInternal(renderer);
+            //foreach (BaseUIControl control in _controls)
+            //{
+            //    renderer.DrawOffset = Vector2.Zero;
+            //    DrawControl(control, renderer);
+            //}
             //renderer.EndDraw();
 
             foreach (Dialog dialog in _shownDialogs)
@@ -77,11 +82,10 @@ namespace LiteEngine.UI
 
         internal void DrawControl(BaseUIControl control, XnaRenderer renderer)
         {
-            if (!control.Visible)
-                return;
-            if (control.BorderWidth > 0.01f)
-                control.DrawBorder(renderer);
+            //control.DrawInternal(renderer);
+
             control.Draw(renderer);
+
             Vector2 drawOffset = renderer.DrawOffset + control.Position;
             foreach (BaseUIControl child in control.Children)
             {

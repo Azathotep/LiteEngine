@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LiteEngine.Math;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace LiteEngine.UI
     {
         public override void AddChild(BaseUIControl child)
         {
-            child.Size = new Vector2(Size.X, child.Size.Y);
+            child.Size = new SizeF(Size.Width, child.Size.Height);
             base.AddChild(child);
             child.OnSizeChanged += child_OnSizeChanged;
         }
@@ -22,7 +23,7 @@ namespace LiteEngine.UI
             foreach (var child in Children)
             {
                 child.Position = new Vector2(0, y);
-                y += child.Size.Y;
+                y += child.Size.Height;
             }
         }
     }

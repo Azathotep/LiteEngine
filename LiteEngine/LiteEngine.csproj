@@ -65,6 +65,7 @@
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Input\XnaKeyboardHandler.cs" />
     <Compile Include="Math\Compass.cs" />
+    <Compile Include="Math\SizeF.cs" />
     <Compile Include="Math\RectangleF.cs" />
     <Compile Include="Math\RectangleI.cs" />
     <Compile Include="Math\SizeI.cs" />

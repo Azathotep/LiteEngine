@@ -61,7 +61,7 @@ namespace LiteEngine.UI
         {
             if (_needsReformatting)
             {
-                Vector2 formattedSize;
+                SizeF formattedSize;
                 float maxWidth = Bounds.Width;
                 if (AutoSize)
                     maxWidth = 10000;
@@ -69,9 +69,10 @@ namespace LiteEngine.UI
                 if (!AutoSize)
                 {
                     //keep the width fixed but allow the height to grow or shrink
-                    formattedSize.X = Size.X;
+                    formattedSize.Width = Size.Width;
                 }
                 Size = formattedSize;
+                _needsReformatting = false;
             }
             if (Background != null)
                 renderer.DrawSprite(Background, Bounds, 0);

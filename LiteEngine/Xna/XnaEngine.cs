@@ -11,6 +11,7 @@ using LiteEngine.Physics;
 using LiteEngine.Particles;
 using Microsoft.Xna.Framework.Audio;
 using LiteEngine.Textures;
+using LiteEngine.Math;
 
 namespace LiteEngine.Xna
 {
@@ -46,11 +47,11 @@ namespace LiteEngine.Xna
             }
         }
 
-        public Vector2 ScreenSize
+        public SizeF ScreenSize
         {
             get
             {
-                return new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+                return new SizeF(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             }
         }
 
@@ -72,8 +73,8 @@ namespace LiteEngine.Xna
 
         int _mouseHandler_OnMouseClick(MouseButton button, Point mousePosition)
         {
-            float x = (float)mousePosition.X / ScreenSize.X;
-            float y = (float)mousePosition.Y / ScreenSize.Y;
+            float x = (float)mousePosition.X / ScreenSize.Width;
+            float y = (float)mousePosition.Y / ScreenSize.Height;
             Vector2 position = new Vector2(x * 2 - 1, (1 - y) * 2 - 1);
             //if (_ui.ProcessKey(key, out repressDelay))
             //    return repressDelay;
@@ -227,8 +228,8 @@ namespace LiteEngine.Xna
         /// </summary>
         public Vector2 GetMousePosition()
         {
-            float x = (float)Mouse.GetState().Position.X / ScreenSize.X;
-            float y = (float)Mouse.GetState().Position.Y / ScreenSize.Y;
+            float x = (float)Mouse.GetState().Position.X / ScreenSize.Width;
+            float y = (float)Mouse.GetState().Position.Y / ScreenSize.Height;
             return new Vector2(x * 2 - 1, (1 - y) * 2 - 1);
         }
 

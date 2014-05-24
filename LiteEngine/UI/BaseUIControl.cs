@@ -34,8 +34,9 @@ namespace LiteEngine.UI
 
         public event EventHandler OnSizeChanged;
 
-        Vector2 _size;
-        public Vector2 Size
+
+        SizeF _size;
+        public SizeF Size
         {
             get
             {
@@ -44,8 +45,21 @@ namespace LiteEngine.UI
             set
             {
                 _size = value;
+                DockReposition();
                 if (OnSizeChanged != null)
                     OnSizeChanged(this, null);
+            }
+        }
+
+        void DockReposition()
+        {
+            if (Parent == null)
+                return;
+            switch (_dock)
+            {
+                case DockPosition.Center:
+                    Position = Parent.Center - Size * 0.5f;
+                    break;
             }
         }
 
@@ -53,6 +67,7 @@ namespace LiteEngine.UI
         {
             child.Parent = this;
             _children.Add(child);
+            child.DockReposition();
         }
 
         /// <summary>
@@ -63,7 +78,7 @@ namespace LiteEngine.UI
         public void AddChild(BaseUIControl child, RectangleF bounds)
         {
             child.Position = new Vector2(bounds.Left, bounds.Top);
-            child.Size = new Vector2(bounds.Width, bounds.Height);
+            child.Size = new SizeF(bounds.Width, bounds.Height);
             AddChild(child);
         }
 
@@ -71,6 +86,22 @@ namespace LiteEngine.UI
         {
             child.Position = position;
             AddChild(child);
+        }
+
+        internal void DrawInternal(XnaRenderer renderer)
+        {
+            if (!Visible)
+                return;
+            if (BorderWidth > 0.01f)
+                DrawBorder(renderer);
+            Draw(renderer);
+
+            Vector2 drawOffset = renderer.DrawOffset + Position;
+            foreach (BaseUIControl child in Children)
+            {
+                renderer.DrawOffset = drawOffset;
+                child.DrawInternal(renderer);
+            }
         }
 
         public virtual void Draw(XnaRenderer renderer)
@@ -98,7 +129,7 @@ namespace LiteEngine.UI
         {
             get
             {
-                return new RectangleF(Position.X, Position.Y, Size.X, Size.Y);
+                return new RectangleF(Position.X, Position.Y, Size.Width, Size.Height);
             }
         }
 
@@ -107,7 +138,7 @@ namespace LiteEngine.UI
             get
             {
                 Vector2 screen = ScreenPosition;
-                return new RectangleF(screen.X, screen.Y, Size.X, Size.Y);
+                return new RectangleF(screen.X, screen.Y, Size.Width, Size.Height);
             }
         }
 
@@ -142,6 +173,37 @@ namespace LiteEngine.UI
         {
             return KeyPressResult.NotHandled;
         }
+
+        DockPosition _dock;
+        public DockPosition Dock
+        {
+            get
+            {
+                return _dock;
+            }
+            set
+            {
+                _dock = value;
+            }
+        }
+
+        public Vector2 Center
+        {
+            get
+            {
+                return Position + Size * 0.5f;
+            }
+        }
+    }
+
+    public enum DockPosition
+    {
+        None,
+        Top,
+        Left,
+        Bottom,
+        Right,
+        Center
     }
 
     /// <summary>
