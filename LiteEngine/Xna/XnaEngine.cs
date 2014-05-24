@@ -21,7 +21,7 @@ namespace LiteEngine.Xna
         XnaKeyboardHandler _keyboardHandler;
         MouseHandler _mouseHandler;
         GraphicsDeviceManager _graphics;
-        UIManager _ui;
+        UserInterface _ui;
         ParticleSystem _particleSystem;
         TextureBook _textureBook = new TextureBook();
 
@@ -124,9 +124,8 @@ namespace LiteEngine.Xna
             _renderer.Initialize();
             //todo - need to know the screen size to initialize the uimanager, but the user doesn't specify it until
             //the Initialize() method, and that needs the UIManager to be created already in case they want to add controls
-            _ui = new UIManager(this);
+            _ui = new UserInterface(this);
             Initialize(_renderer);
-            _ui.Initialize();
             base.Initialize();
         }
 
@@ -215,7 +214,7 @@ namespace LiteEngine.Xna
             }
         }
 
-        public UIManager UIManager
+        public UserInterface UserInterface
         {
             get
             {

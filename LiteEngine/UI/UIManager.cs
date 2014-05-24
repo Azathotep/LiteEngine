@@ -9,18 +9,19 @@ using LiteEngine.Rendering;
 
 namespace LiteEngine.UI
 {
-    public class UIManager
+    public class UserInterface
     {
         Camera2D _camera;
         LiteXnaEngine _engine;
-        public UIManager(LiteXnaEngine engine)
+        public UserInterface(LiteXnaEngine engine)
         {
             _engine = engine;
+            SetResolution(800, 600);
         }
 
-        public void Initialize()
+        public void SetResolution(int width, int height)
         {
-            _camera = new Camera2D(new Vector2(_engine.ScreenSize.X / 2, _engine.ScreenSize.Y / 2), new Vector2(_engine.ScreenSize.X, _engine.ScreenSize.Y));
+            _camera = new Camera2D(new Vector2(0, 0), new Vector2(width, height));
         }
 
         List<Dialog> _shownDialogs = new List<Dialog>();
@@ -58,7 +59,7 @@ namespace LiteEngine.UI
                 renderer.DrawOffset = Vector2.Zero;
                 DrawControl(control, renderer);
             }
-            renderer.EndDraw();
+            //renderer.EndDraw();
 
             foreach (Dialog dialog in _shownDialogs)
             {

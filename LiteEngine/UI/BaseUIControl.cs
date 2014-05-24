@@ -138,7 +138,7 @@ namespace LiteEngine.UI
         /// <param name="key">pressed key</param>
         /// <returns>Structure indicating whether the key press was handled and if so what the delay should
         /// be before the key can be reprocessed</returns>
-        public virtual KeyPressResult ProcessKey(UIManager manager, Keys key)
+        public virtual KeyPressResult ProcessKey(UserInterface manager, Keys key)
         {
             return KeyPressResult.NotHandled;
         }
