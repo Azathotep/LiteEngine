@@ -72,6 +72,30 @@ namespace LiteEngine.UI
                 case DockPosition.Center:
                     Position = Parent.Center - Size * 0.5f;
                     break;
+                case DockPosition.Top:
+                    Position = new Vector2(Parent.Center.X - Size.Width * 0.5f, 0);
+                    break;
+                case DockPosition.Bottom:
+                    Position = new Vector2(Parent.Center.X - Size.Width * 0.5f, Parent.Size.Height - Size.Height);
+                    break;
+                case DockPosition.Right:
+                    Position = new Vector2(Parent.Size.Width - Size.Width, Parent.Center.Y - Size.Height * 0.5f);
+                    break;
+                case DockPosition.Left:
+                    Position = new Vector2(0, Parent.Center.Y - Size.Height * 0.5f);
+                    break;
+                case DockPosition.TopLeft:
+                    Position = new Vector2(0, 0);
+                    break;
+                case DockPosition.TopRight:
+                    Position = new Vector2(Parent.Size.Width - Size.Width, 0);
+                    break;
+                case DockPosition.BottomRight:
+                    Position = new Vector2(Parent.Size.Width - Size.Width, Parent.Size.Height - Size.Height);
+                    break;
+                case DockPosition.BottomLeft:
+                    Position = new Vector2(0, Parent.Size.Height - Size.Height);
+                    break;
             }
         }
 
@@ -222,7 +246,11 @@ namespace LiteEngine.UI
         Left,
         Bottom,
         Right,
-        Center
+        Center,
+        TopLeft,
+        TopRight,
+        BottomRight,
+        BottomLeft
     }
 
     /// <summary>

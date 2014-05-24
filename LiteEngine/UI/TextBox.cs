@@ -53,7 +53,7 @@ namespace LiteEngine.UI
             }
         }
 
-        public Color TextColor = Color.White;
+        public Color TextColor = Color.Black;
 
         public bool AutoSize = false;
 
