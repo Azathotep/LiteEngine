@@ -73,11 +73,24 @@ namespace LiteEngine.UI
                 renderer.DrawOffset = Vector2.Zero;
                 DrawControl(dialog, renderer);
             }
+
+            if (ShowMouseCursor)
+                DrawMouseCursor(renderer);
+
             renderer.EndDraw();
 
             foreach (Dialog dialog in _closeList)
                 _shownDialogs.Remove(dialog);
             _closeList.Clear();
+        }
+
+        public bool ShowMouseCursor = false;
+
+        void DrawMouseCursor(XnaRenderer renderer)
+        {
+            Vector2 mPos = _engine.GetMousePosition();
+            mPos = _camera.ViewToWorld(mPos);
+            renderer.DrawPoint(mPos, 10f, Color.Green, 1f);
         }
 
         internal void DrawControl(BaseUIControl control, XnaRenderer renderer)
