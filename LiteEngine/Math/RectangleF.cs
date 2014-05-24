@@ -1,4 +1,5 @@
-﻿namespace LiteEngine.Math
+﻿using Microsoft.Xna.Framework;
+namespace LiteEngine.Math
 {
     /// <summary>
     /// Float rectangle
@@ -111,6 +112,38 @@
             get
             {
                 return _y + _height;
+            }
+        }
+
+        public Vector2 TopLeft
+        {
+            get
+            {
+                return new Vector2(Left, Top);
+            }
+        }
+
+        public Vector2 TopRight
+        {
+            get
+            {
+                return new Vector2(Right, Top);
+            }
+        }
+
+        public Vector2 BottomLeft
+        {
+            get
+            {
+                return new Vector2(Left, Bottom);
+            }
+        }
+
+        public Vector2 BottomRight
+        {
+            get
+            {
+                return new Vector2(Right, Bottom);
             }
         }
     }  

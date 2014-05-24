@@ -110,8 +110,8 @@ namespace LiteEngine.UI
 
         public void DrawBorder(XnaRenderer renderer)
         {
-            if (BorderWidth > 0.01f)
-                renderer.DrawSprite(_borderTexture, Bounds.Grow(BorderWidth));
+            RectangleF borderRect = Bounds.Grow(BorderWidth);
+            renderer.DrawRectangle(borderRect, BorderWidth, Color.White);
         }
 
         protected Vector2 ScreenPosition
