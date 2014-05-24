@@ -362,13 +362,13 @@ namespace LiteEngine.Rendering
         /// <summary>
         /// Draws the border of an unfilled rectangle
         /// </summary>
-        internal void DrawRectangle(RectangleF rect, float thickness, Color color, float alpha=1)
+        internal void DrawRectangle(RectangleF bounds, float thickness, Color color, float alpha=1)
         {
             //thickness * 0.5 stuff is needed as the top of the rectangle is actually rectWidth + thickness
-            DrawLine(rect.TopLeft, rect.TopRight + new Vector2(thickness * 0.5f,0), thickness, color, alpha);
-            DrawLine(rect.TopRight, rect.BottomRight + new Vector2(0, thickness * 0.5f), thickness, color, alpha);
-            DrawLine(rect.BottomRight, rect.BottomLeft - new Vector2(thickness * 0.5f, 0), thickness, color, alpha);
-            DrawLine(rect.BottomLeft, rect.TopLeft - new Vector2(0, thickness * 0.5f), thickness, color, alpha);
+            DrawLine(bounds.TopLeft, bounds.TopRight + new Vector2(thickness * 0.5f, 0), thickness, color, alpha);
+            DrawLine(bounds.TopRight, bounds.BottomRight + new Vector2(0, thickness * 0.5f), thickness, color, alpha);
+            DrawLine(bounds.BottomRight, bounds.BottomLeft - new Vector2(thickness * 0.5f, 0), thickness, color, alpha);
+            DrawLine(bounds.BottomLeft, bounds.TopLeft - new Vector2(0, thickness * 0.5f), thickness, color, alpha);
         }
     }
 }

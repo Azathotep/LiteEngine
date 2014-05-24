@@ -34,6 +34,18 @@ namespace LiteEngine.UI
 
         public event EventHandler OnSizeChanged;
 
+        Color _backgroundColor = Color.Transparent;
+        public Color BackgroundColor
+        {
+            get
+            {
+                return _backgroundColor;
+            }
+            set
+            {
+                _backgroundColor = value;
+            }
+        }
 
         SizeF _size;
         public SizeF Size
@@ -92,6 +104,8 @@ namespace LiteEngine.UI
         {
             if (!Visible)
                 return;
+            if (BackgroundColor != Color.Transparent)
+                DrawBackground(renderer);
             if (BorderWidth > 0.01f)
                 DrawBorder(renderer);
             Draw(renderer);
@@ -104,6 +118,11 @@ namespace LiteEngine.UI
             }
         }
 
+        private void DrawBackground(XnaRenderer renderer)
+        {
+            renderer.DrawFilledRectangle(Bounds.Grow(BorderWidth), BackgroundColor);
+        }
+
         public virtual void Draw(XnaRenderer renderer)
         {
         }
@@ -111,7 +130,7 @@ namespace LiteEngine.UI
         public void DrawBorder(XnaRenderer renderer)
         {
             RectangleF borderRect = Bounds.Grow(BorderWidth);
-            renderer.DrawRectangle(borderRect, BorderWidth, Color.White);
+            renderer.DrawRectangle(borderRect, BorderWidth, Color.Black);
         }
 
         protected Vector2 ScreenPosition
