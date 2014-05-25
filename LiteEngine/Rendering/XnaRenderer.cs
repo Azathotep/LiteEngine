@@ -156,16 +156,8 @@ namespace LiteEngine.Rendering
 
         public void DrawSprite(Texture2D texture, Rectangle sourceRect, RectangleF destRect, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
         {
-            Vector2 scale = Vector2.One;
-            if (!wrapped)
+            if (wrapped)
             {
-                float scaleW = 1 / (float)sourceRect.Width * destRect.Width;
-                float scaleH = 1 / (float)sourceRect.Height * destRect.Height;
-                scale = new Vector2(scaleW, scaleH);
-            }
-            else
-            {
-                //scale = new Vector2(0.1f, 0.1f);
                 sourceRect = new Rectangle(0, 0, 2000, 900);
             }
             origin.X *= sourceRect.Width;
@@ -176,7 +168,29 @@ namespace LiteEngine.Rendering
                 effects = SpriteEffects.FlipHorizontally;
             Vector2 position = DrawOffset + new Vector2(destRect.X, destRect.Y);
             position = Vector2.Transform(position, Transformation);
-            _spriteBatch.Draw(texture, position, sourceRect, color, rotation, new Vector2(origin.X, origin.Y), scale, effects, drawDepth);
+            //calls a non-XNA method that accepts the destination rectangle not a position and size (there is an XNA method that accepts a destination rectangle
+            //but it's an int rectangle)
+            _spriteBatch.Draw(texture, new Vector4(position.X, position.Y, destRect.Width, destRect.Height), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), effects, drawDepth);
+        }
+
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Corners destCorners, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
+        {
+            Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
+            Rectangle sourceRect = xnaTexture.Bounds;
+            if (texture.Bounds.HasValue)
+                sourceRect = new Rectangle(texture.Bounds.Value.X, texture.Bounds.Value.Y, texture.Bounds.Value.Width, texture.Bounds.Value.Height);
+            DrawSprite(xnaTexture, sourceRect, destCorners, drawDepth, rotation, origin, color, flipHorizontal, wrapped);
+        }
+
+        public void DrawSprite(Texture2D texture, Rectangle sourceRect, Corners destCorners, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
+        {
+            origin.X *= sourceRect.Width;
+            origin.Y *= sourceRect.Height;
+            SpriteEffects effects = SpriteEffects.None;
+            if (flipHorizontal)
+                effects = SpriteEffects.FlipHorizontally;
+            //TODO transform by Transformation (see other DrawSprite method)
+            _spriteBatch.DrawQuadrilateral(texture, destCorners.TopLeft, destCorners.TopRight, destCorners.BottomLeft, destCorners.BottomRight, sourceRect, color, rotation, origin, effects, drawDepth);
         }
 
         Matrix _transformation = Matrix.Identity;
@@ -369,6 +383,22 @@ namespace LiteEngine.Rendering
             DrawLine(bounds.TopRight, bounds.BottomRight + new Vector2(0, thickness * 0.5f), thickness, color, alpha);
             DrawLine(bounds.BottomRight, bounds.BottomLeft - new Vector2(thickness * 0.5f, 0), thickness, color, alpha);
             DrawLine(bounds.BottomLeft, bounds.TopLeft - new Vector2(0, thickness * 0.5f), thickness, color, alpha);
+        }
+    }
+
+    public struct Corners
+    {
+        public Vector2 TopLeft;
+        public Vector2 TopRight;
+        public Vector2 BottomLeft;
+        public Vector2 BottomRight;
+
+        public Corners(Vector2 topLeft, Vector2 topRight, Vector2 bottomLeft, Vector2 bottomRight)
+        {
+            TopLeft = topLeft;
+            TopRight = topRight;
+            BottomLeft = bottomLeft;
+            BottomRight = bottomRight;
         }
     }
 }
