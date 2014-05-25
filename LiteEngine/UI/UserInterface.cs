@@ -55,11 +55,11 @@ namespace LiteEngine.UI
 
         List<Dialog> _closeList = new List<Dialog>();
 
-        internal void RenderUI(XnaRenderer renderer)
+        internal void RenderUI(GameTime gameTime, XnaRenderer renderer)
         {
             renderer.BeginDraw(_camera, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
 
-            DrawInternal(renderer);
+            DrawInternal(gameTime, renderer);
             //foreach (BaseUIControl control in _controls)
             //{
             //    renderer.DrawOffset = Vector2.Zero;
@@ -98,14 +98,14 @@ namespace LiteEngine.UI
         {
             //control.DrawInternal(renderer);
 
-            control.Draw(renderer);
+            //control.Draw(renderer);
 
-            Vector2 drawOffset = renderer.DrawOffset + control.Position;
-            foreach (BaseUIControl child in control.Children)
-            {
-                renderer.DrawOffset = drawOffset;
-                DrawControl(child, renderer);
-            }
+            //Vector2 drawOffset = renderer.DrawOffset + control.Position;
+            //foreach (BaseUIControl child in control.Children)
+            //{
+            //    renderer.DrawOffset = drawOffset;
+            //    DrawControl(child, renderer);
+            //}
         }
 
         /// <summary>

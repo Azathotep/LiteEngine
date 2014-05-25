@@ -83,6 +83,7 @@
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
     <Compile Include="Rendering\ICamera.cs" />
+    <Compile Include="Rendering\SimpleAnimation.cs" />
     <Compile Include="Rendering\Timeline.cs" />
     <Compile Include="Rendering\XnaRenderer.cs" />
     <Compile Include="Textures\SpriteSheet.cs" />

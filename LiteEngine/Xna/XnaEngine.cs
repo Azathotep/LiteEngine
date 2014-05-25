@@ -188,7 +188,7 @@ namespace LiteEngine.Xna
             if (_autoClear)
                 _renderer.Clear(Color.Black);
             DrawFrame(gameTime, _renderer);
-            _ui.RenderUI(_renderer);
+            _ui.RenderUI(gameTime, _renderer);
             base.Draw(gameTime);
         }
 

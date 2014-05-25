@@ -27,7 +27,7 @@ namespace LiteEngine.UI
             set;
         }
 
-        public override void Draw(XnaRenderer renderer)
+        public override void Draw(GameTime gameTime, XnaRenderer renderer)
         {
             if (Image != null)
                 renderer.DrawSprite(Image, Bounds, 0);

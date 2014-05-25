@@ -24,5 +24,7 @@ namespace LiteEngine.Rendering
                 return _currentTexture;
             }
         }
+
+        public bool IsRunning { get; set; }
     }
 }

@@ -12,23 +12,34 @@ namespace LiteEngine.UI
 {
     public class Button : BaseUIControl
     {
+        SimpleAnimation _clickAnimation = new SimpleAnimation(0.1, false);
         public Button()
         {
             BackgroundColor = Color.LightGray;
             BorderWidth = 1;
+            _clickAnimation.OnDraw += (elapsedSeconds, renderer) =>
+                {
+                    BackgroundColor = Color.Lerp(Color.LightGray, Color.DarkGray, (float)elapsedSeconds / 0.1f);
+                };
+            _clickAnimation.OnEnd += () =>
+                {
+                    BackgroundColor = Color.LightGray;
+                };
         }
 
         public Action OnClick;
 
         protected override bool OnMouseClick(MouseButton button, Vector2 position)
         {
+            _clickAnimation.Start();
             if (OnClick != null)
                 OnClick();
             return true;
         }
 
-        public override void Draw(XnaRenderer renderer)
+        public override void Draw(GameTime gameTime, XnaRenderer renderer)
         {
+            _clickAnimation.Draw(gameTime, renderer);
         }
     }
 }

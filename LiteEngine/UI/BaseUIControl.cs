@@ -154,7 +154,7 @@ namespace LiteEngine.UI
             AddChild(child);
         }
 
-        internal void DrawInternal(XnaRenderer renderer)
+        internal void DrawInternal(GameTime gameTime, XnaRenderer renderer)
         {
             if (!Visible)
                 return;
@@ -162,13 +162,13 @@ namespace LiteEngine.UI
                 DrawBackground(renderer);
             if (BorderWidth > 0.01f)
                 DrawBorder(renderer);
-            Draw(renderer);
+            Draw(gameTime, renderer);
 
             Vector2 drawOffset = renderer.DrawOffset;
             foreach (BaseUIControl child in Children)
             {
                 renderer.DrawOffset = drawOffset + Position;
-                child.DrawInternal(renderer);
+                child.DrawInternal(gameTime, renderer);
             }
             renderer.DrawOffset = drawOffset;
         }
@@ -178,7 +178,7 @@ namespace LiteEngine.UI
             renderer.DrawFilledRectangle(Bounds.Grow(BorderWidth), BackgroundColor);
         }
 
-        public virtual void Draw(XnaRenderer renderer)
+        public virtual void Draw(GameTime gameTime, XnaRenderer renderer)
         {
         }
 

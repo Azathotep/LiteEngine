@@ -57,7 +57,7 @@ namespace LiteEngine.UI
 
         public bool AutoSize = false;
 
-        public override void Draw(XnaRenderer renderer)
+        public override void Draw(GameTime gameTime, XnaRenderer renderer)
         {
             if (_needsReformatting)
             {

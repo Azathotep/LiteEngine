@@ -41,16 +41,10 @@ namespace LiteEngine.UI
             if (_onComplete != null)
                 _onComplete(this);
         }
-        
-        public override void Draw(XnaRenderer renderer)
+
+        public override void Draw(GameTime gameTime, XnaRenderer renderer)
         {
             renderer.DrawSprite(_background, Bounds, BackgroundColor);
-        }
-        
-        public Color BackgroundColor
-        {
-            get;
-            set;
         }
 
         public delegate void OnDialogCompleteHandler(Dialog dialog);
