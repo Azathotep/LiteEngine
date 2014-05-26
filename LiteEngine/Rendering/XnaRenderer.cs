@@ -243,7 +243,7 @@ namespace LiteEngine.Rendering
             effect.Parameters["xProjection"].SetValue(camera.Projection);
             effect.Parameters["xView"].SetValue(camera.View);   // blendstate was null before
             //linearClamp LinearWrap
-            _spriteBatch.Begin(sortMode, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, effect, Matrix.Identity);
+            _spriteBatch.Begin(sortMode, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, effect, Matrix.Identity);
         }
 
         public void EndDraw()
