@@ -11,7 +11,9 @@ namespace LiteEngine.Textures
     /// </summary>
     public class TextureBook
     {
-        Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
+        static Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
+
+        private TextureBook() { }
 
         /// <summary>
         /// Adds all the textures in a spritesheet. Loads the spritesheet's corresponding XML file
@@ -21,7 +23,7 @@ namespace LiteEngine.Textures
         /// build action Content (and copied to output folder) without the file extension.</param>
         /// <param name="spriteSheetXmlPath">resource path to the sprite sheet xml file. If omitted the xml file
         /// is assumed to be Content\SpriteSheets\spriteSheetName.xml</param>
-        public void AddSpriteSheetTextures(string spriteSheetName, string spriteSheetXmlPath="")
+        public static void AddSpriteSheet(string spriteSheetName, string spriteSheetXmlPath="")
         {
             if (spriteSheetXmlPath == "")
                 spriteSheetXmlPath = @"Content\" + spriteSheetName + ".xml";
@@ -36,7 +38,7 @@ namespace LiteEngine.Textures
         /// <summary>
         /// Obtains a texture by name
         /// </summary>
-        public Texture GetTexture(string name)
+        public static Texture GetTexture(string name)
         {
             return _textures[name];
         }
