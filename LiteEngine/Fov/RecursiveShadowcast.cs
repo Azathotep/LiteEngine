@@ -38,6 +38,9 @@ namespace LiteEngine.Fov
             OctScan(6, 1, -1, 0);
             OctScan(7, 1, -1, 0);
             OctScan(8, 1, 1, 0);
+
+            //need to explicitly report eye tile as visible
+            fovInfo.OnTileVisible(eye.X, eye.Y);
         }
 
         private void OctScan(int oct, int depth, float slopeStart, float slopeEnd)
