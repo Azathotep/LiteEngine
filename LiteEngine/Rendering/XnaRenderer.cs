@@ -173,16 +173,21 @@ namespace LiteEngine.Rendering
             _spriteBatch.Draw(texture, new Vector4(position.X, position.Y, destRect.Width, destRect.Height), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), effects, drawDepth);
         }
 
-        public void DrawSprite(LiteEngine.Textures.Texture texture, Corners destCorners, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Corners destCorners, Color color, bool flipHorizontal = false, bool wrapped = false)
+        {
+            DrawSprite(texture, destCorners, 0, Vector2.Zero, color);
+        }
+
+        public void DrawSprite(LiteEngine.Textures.Texture texture, Corners destCorners, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
         {
             Texture2D xnaTexture = _contentManager.Load<Texture2D>(texture.Name);
             Rectangle sourceRect = xnaTexture.Bounds;
             if (texture.Bounds.HasValue)
                 sourceRect = new Rectangle(texture.Bounds.Value.X, texture.Bounds.Value.Y, texture.Bounds.Value.Width, texture.Bounds.Value.Height);
-            DrawSprite(xnaTexture, sourceRect, destCorners, drawDepth, rotation, origin, color, flipHorizontal, wrapped);
+            DrawSprite(xnaTexture, sourceRect, destCorners, rotation, origin, color, flipHorizontal, wrapped);
         }
 
-        public void DrawSprite(Texture2D texture, Rectangle sourceRect, Corners destCorners, float drawDepth, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
+        public void DrawSprite(Texture2D texture, Rectangle sourceRect, Corners destCorners, float rotation, Vector2 origin, Color color, bool flipHorizontal = false, bool wrapped = false)
         {
             origin.X *= sourceRect.Width;
             origin.Y *= sourceRect.Height;
@@ -190,7 +195,7 @@ namespace LiteEngine.Rendering
             if (flipHorizontal)
                 effects = SpriteEffects.FlipHorizontally;
             //TODO transform by Transformation (see other DrawSprite method)
-            _spriteBatch.DrawQuadrilateral(texture, destCorners.TopLeft, destCorners.TopRight, destCorners.BottomLeft, destCorners.BottomRight, sourceRect, color, rotation, origin, effects, drawDepth);
+            _spriteBatch.DrawQuadrilateral(texture, destCorners.TopLeft, destCorners.TopRight, destCorners.BottomLeft, destCorners.BottomRight, sourceRect, color, rotation, origin, effects, DrawDepth);
         }
 
         Matrix _transformation = Matrix.Identity;
