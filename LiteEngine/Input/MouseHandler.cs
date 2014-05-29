@@ -15,7 +15,8 @@ namespace LiteEngine.Input
             MouseState state = Mouse.GetState();
             if (state.LeftButton == ButtonState.Pressed && _lastState.LeftButton == ButtonState.Released)
                 OnMouseClick(MouseButton.Left, state.Position);
-
+            if (state.RightButton == ButtonState.Pressed && _lastState.RightButton == ButtonState.Released)
+                OnMouseClick(MouseButton.Right, state.Position);
             _lastState = state;
         }
 
