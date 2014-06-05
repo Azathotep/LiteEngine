@@ -14,6 +14,8 @@ namespace LiteEngine.Rendering
             {
                 _currentTexture = texture;
             }, duration);
+            if (_currentTexture == null)
+                _currentTexture = texture;
         }
 
         Texture _currentTexture;

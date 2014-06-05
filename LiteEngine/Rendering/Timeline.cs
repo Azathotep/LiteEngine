@@ -9,7 +9,7 @@ namespace LiteEngine.Rendering
     {
         List<TimelineEvent> _events = new List<TimelineEvent>();
         int _currentEventIndex = -1;
-        int _elapsed;
+        float _elapsed;
 
         public void AddEvent(Action action, int duration)
         {
@@ -47,7 +47,7 @@ namespace LiteEngine.Rendering
                 _events[0].Action();
             }
 
-            _elapsed += timeMs;
+            _elapsed += (timeMs * _speed);
 
             TimelineEvent currentEvent = _events[_currentEventIndex];
 
@@ -70,6 +70,19 @@ namespace LiteEngine.Rendering
         {
             _currentEventIndex = -1;
             _elapsed = 0;
+        }
+
+        float _speed = 1f;
+        public float Speed
+        {
+            get
+            {
+                return _speed;
+            }
+            set
+            {
+                _speed = value;
+            }
         }
     }
 
