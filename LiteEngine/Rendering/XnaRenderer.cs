@@ -170,6 +170,7 @@ namespace LiteEngine.Rendering
             position = Vector2.Transform(position, Transformation);
             //calls a non-XNA method that accepts the destination rectangle not a position and size (there is an XNA method that accepts a destination rectangle
             //but it's an int rectangle)
+
             _spriteBatch.Draw(texture, new Vector4(position.X, position.Y, destRect.Width, destRect.Height), sourceRect, color, rotation, new Vector2(origin.X, origin.Y), effects, drawDepth);
         }
 
@@ -195,6 +196,13 @@ namespace LiteEngine.Rendering
             if (flipHorizontal)
                 effects = SpriteEffects.FlipHorizontally;
             //TODO transform by Transformation (see other DrawSprite method)
+            if (DrawOffset != Vector2.Zero)
+            {
+                destCorners.TopLeft += DrawOffset;
+                destCorners.TopRight += DrawOffset;
+                destCorners.BottomLeft += DrawOffset;
+                destCorners.BottomRight += DrawOffset;
+            }
             _spriteBatch.DrawQuadrilateral(texture, destCorners.TopLeft, destCorners.TopRight, destCorners.BottomLeft, destCorners.BottomRight, sourceRect, color, rotation, origin, effects, DrawDepth);
         }
 
@@ -371,10 +379,11 @@ namespace LiteEngine.Rendering
             float tipAngle1 = angle + (float)System.Math.PI / 4;
             float tipAngle2 = angle - (float)System.Math.PI / 4;
 
-            Vector2 v = Util.AngleToVector(tipAngle1) * 0.707f;
+            //arrowhead lines hardcoded to thickness * 4 in length
+            Vector2 v = Util.AngleToVector(tipAngle1) * thickness * 4f;
             DrawLine(end, end - v, thickness, color, alpha);
 
-            v = Util.AngleToVector(tipAngle2) * 0.707f;
+            v = Util.AngleToVector(tipAngle2) * thickness * 4f;
             DrawLine(end, end - v, thickness, color, alpha);
         }
 
