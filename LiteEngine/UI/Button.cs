@@ -26,6 +26,31 @@ namespace LiteEngine.UI
                     BackgroundColor = Color.LightGray;
                 };
         }
+        
+        TextBox _textBox;
+        string _text;
+        public string Text
+        {
+            get
+            {
+                if (_textBox == null)
+                    return "";
+                return _textBox.Text;
+            }
+            set
+            {
+                if (_textBox == null)
+                {
+                    _textBox = new TextBox();
+                    _textBox.Dock = DockPosition.Center;
+                    _textBox.AutoSize = true;
+                    AddChild(_textBox);
+                }
+                _textBox.Text = value;
+            }
+        }
+
+
 
         public Action OnClick;
 

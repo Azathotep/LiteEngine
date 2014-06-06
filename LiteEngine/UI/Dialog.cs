@@ -17,7 +17,7 @@ namespace LiteEngine.UI
         public Dialog(OnDialogCompleteHandler onComplete=null)
         {
             _onComplete = onComplete;
-            _background = new Texture("dialog");
+            _background = new Texture("solid");
             BackgroundColor = Color.White;
         }
 

@@ -39,12 +39,6 @@ namespace LiteEngine.UI
             ShowDialog(dialog, _engine.ScreenSize * 0.5f - dialog.Size * 0.5f);
         }
 
-        //public void AddControl(BaseUIControl control)
-        //{
-        //    AddChild(control);
-        //   // _controls.Add(control);
-        //}
-
         public void ShowDialog(Dialog dialog, Vector2 position)
         {
             dialog.Position = position;
@@ -60,19 +54,13 @@ namespace LiteEngine.UI
             renderer.BeginDraw(_camera, Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred);
 
             DrawInternal(gameTime, renderer);
-            //foreach (BaseUIControl control in _controls)
-            //{
-            //    renderer.DrawOffset = Vector2.Zero;
-            //    DrawControl(control, renderer);
-            //}
-            //renderer.EndDraw();
 
             foreach (Dialog dialog in _shownDialogs)
             {
                 if (dialog.IsClosing)
                     _closeList.Add(dialog);
                 renderer.DrawOffset = Vector2.Zero;
-                DrawControl(dialog, renderer);
+                dialog.DrawInternal(gameTime, renderer);
             }
 
             if (ShowMouseCursor)
@@ -94,20 +82,6 @@ namespace LiteEngine.UI
             renderer.DrawPoint(mPos, 10f, Color.Green, 1f);
         }
 
-        internal void DrawControl(BaseUIControl control, XnaRenderer renderer)
-        {
-            //control.DrawInternal(renderer);
-
-            //control.Draw(renderer);
-
-            //Vector2 drawOffset = renderer.DrawOffset + control.Position;
-            //foreach (BaseUIControl child in control.Children)
-            //{
-            //    renderer.DrawOffset = drawOffset;
-            //    DrawControl(child, renderer);
-            //}
-        }
-
         /// <summary>
         /// Processes a mouse click occurs by sending it to the correct control in the control tree
         /// </summary>
@@ -118,7 +92,16 @@ namespace LiteEngine.UI
         {
             //get the mouse position in UI coordinates
             Vector2 mousePos = _camera.ViewToWorld(viewPosition);
-            bool handled = OnMouseClickInternal(button, mousePos);
+
+            bool handled;
+            foreach (Dialog dialog in _shownDialogs)
+            {
+                Vector2 relPos = mousePos - dialog.Position;
+                handled = dialog.OnMouseClickInternal(button, relPos);
+                if (handled)
+                    return handled;
+            }
+            handled = OnMouseClickInternal(button, mousePos);
             return handled;
         }
 
