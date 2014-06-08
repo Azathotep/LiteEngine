@@ -98,6 +98,8 @@ namespace LiteEngine.UI
                     Position = new Vector2(0, Parent.Size.Height - Size.Height);
                     break;
             }
+            foreach (var child in _children)
+                child.DockReposition();
         }
 
         /// <summary>

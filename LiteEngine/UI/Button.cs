@@ -52,13 +52,13 @@ namespace LiteEngine.UI
 
 
 
-        public Action OnClick;
+        public Action<Button> OnClick;
 
         protected override bool OnMouseClick(MouseButton button, Vector2 position)
         {
             _clickAnimation.Start();
             if (OnClick != null)
-                OnClick();
+                OnClick(this);
             return true;
         }
 
