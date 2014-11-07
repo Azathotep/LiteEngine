@@ -31,6 +31,10 @@ namespace LiteEngine.Xna
             _particleSystem = new ParticleSystem(_physics);
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //last parameter null for android
+            //_renderer = new XnaRenderer(_graphics, Content, null);
+
             _renderer = new XnaRenderer(_graphics, Content, Window);
             _keyboardHandler = new XnaKeyboardHandler();
             _keyboardHandler.OnKeyPressed += _keyboardHandler_OnKeyPressed;

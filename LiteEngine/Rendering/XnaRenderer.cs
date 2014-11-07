@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using LiteEngine.Math;
 using LiteEngine.Textures;
+using System.Windows.Forms;
 
 namespace LiteEngine.Rendering
 {
@@ -54,19 +54,24 @@ namespace LiteEngine.Rendering
             //and cannot be changed
             if (fullscreen)
             {
+				//A bunch of this stuff doesn't work for android, eg
+				//the System.Windows.Forms.Screen reference
                 _window.IsBorderless = true;
                 _deviceManager.PreferredBackBufferWidth = Screen.PrimaryScreen.Bounds.Width;
                 _deviceManager.PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height;
-                _window.Position = Point.Zero;
+                _window.Position = Point.Zero; //Doesnt exist for Android
                 _deviceManager.IsFullScreen = true;
             }
             else
             {
-                _window.IsBorderless = false;
+                //_window.IsBorderless = false;
                 //Strange, when NOT running under the debugger changing the Position of the Window causes the OnClientSizeChanged
                 //event to be raised which monogame catches and resets the backbufferwidth and height. So need to set position here first.
+
+                //Doesnt exist for Android
                 _window.Position = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - width / 2,
                                              Screen.PrimaryScreen.Bounds.Height / 2 - height / 2);
+
                 _deviceManager.PreferredBackBufferWidth = width;
                 _deviceManager.PreferredBackBufferHeight = height;
             }
